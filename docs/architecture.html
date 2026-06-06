@@ -38,7 +38,7 @@ flowchart LR
     V -- tool: disponibilita --> B
     V -- tool: prenotazione --> B
     B -- risultato --> V
-    B --> R[("Indice FAISS<br/>servizi comunali")]
+    B --> R[("Indice servizi<br/>cosine NumPy")]
     B --> D[("SQLite<br/>appuntamenti")]
     </div>
   </div>
@@ -50,7 +50,7 @@ flowchart LR
     S[Scraping<br/>crawl4ai] --> CB[Corpus building<br/>pulizia + dedup + metadata]
     CB --> CK[Suddivisione in blocchi]
     CK --> EM[Embedding multilingue]
-    EM --> R[("Indice FAISS")]
+    EM --> R[("Indice servizi<br/>cosine NumPy")]
     </div>
     <p class="sub">Lo scraping estrae il contenuto grezzo; il corpus building lo trasforma in una base
     testuale pulita con fonte e sezione. Solo dopo si creano blocchi, vettori e indice.</p>
@@ -74,7 +74,7 @@ flowchart LR
   </div>
 
   <footer>Diagrammi resi con Mermaid via CDN (richiede connessione). Vedi anche
-  <code>ARCHITECTURE.md</code>, <code>DECISIONS.md</code>, <code>ROADMAP.md</code>.</footer>
+  <code>BLUEPRINT.md</code>, <code>ROADMAP.md</code>.</footer>
 
 <script>
   mermaid.initialize({ startOnLoad:true, theme:'dark',
