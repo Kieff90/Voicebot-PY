@@ -14,3 +14,6 @@ ingestion/data/
 
 # Sistema
 .DS_Store
+
+# DB locale generato a runtime
+data/
