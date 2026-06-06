@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Voicebot servizi comunali — Architettura</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root{ --bg:#0f1115; --panel:#171a21; --ink:#e6e8ec; --muted:#9aa3b2; --line:#262b35; --accent:#3b82f6; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;padding:32px;max-width:1080px;margin:0 auto}
+  h1{font-size:24px;margin:0 0 4px}
+  h2{font-size:18px;margin:32px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+  p.sub{color:var(--muted);margin:0 0 8px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  ul{margin:8px 0 0;padding-left:20px}
+  li{margin:4px 0}
+  code{background:#0c0f15;border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+  .mermaid{background:transparent;text-align:center}
+  footer{color:var(--muted);font-size:13px;margin-top:32px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+
+  <h1>Voicebot servizi comunali — Comune di Codroipo</h1>
+  <p class="sub">Architettura: assistente vocale (Vapi) e backend (FastAPI) che gestisce recupero
+  informazioni e appuntamenti.</p>
+
+  <h2>Flusso di una conversazione</h2>
+  <div class="panel">
+    <div class="mermaid">
+flowchart LR
+    C[Cittadino] -- voce --> V[Assistente vocale<br/>Vapi]
+    V -- voce --> C
+    V -- tool: info servizi --> B[Backend FastAPI]
+    V -- tool: disponibilita --> B
+    V -- tool: prenotazione --> B
+    B -- risultato --> V
+    B --> R[("Indice FAISS<br/>servizi comunali")]
+    B --> D[("SQLite<br/>appuntamenti")]
+    </div>
+  </div>
+
+  <h2>Dall'acquisizione all'indice (offline)</h2>
+  <div class="panel">
+    <div class="mermaid">
+flowchart LR
+    S[Scraping<br/>crawl4ai] --> CB[Corpus building<br/>pulizia + dedup + metadata]
+    CB --> CK[Suddivisione in blocchi]
+    CK --> EM[Embedding multilingue]
+    EM --> R[("Indice FAISS")]
+    </div>
+    <p class="sub">Lo scraping estrae il contenuto grezzo; il corpus building lo trasforma in una base
+    testuale pulita con fonte e sezione. Solo dopo si creano blocchi, vettori e indice.</p>
+  </div>
+
+  <h2>Controlli di qualità</h2>
+  <div class="panel">
+    <ul>
+      <li><b>Corpus building</b>: scarto di pagine vuote o troppo brevi, solo contenuto in italiano,
+      rimozione di duplicati e parti ripetute; ogni unità conserva fonte e data.</li>
+      <li><b>Indicizzazione</b>: l'indice si carica, il numero di blocchi è quello atteso, una query
+      di prova restituisce risultati.</li>
+      <li><b>Recupero</b>: soglia di similarità. Sotto soglia, l'assistente dichiara che
+      l'informazione non è disponibile invece di restituire contenuto poco pertinente.</li>
+      <li><b>Confine dei tool</b>: validazione di tipo e formato degli argomenti, rifiuto delle
+      richieste malformate, timeout sulle chiamate.</li>
+      <li><b>Appuntamenti</b>: data e ora valide e future, slot esistente, controllo anti doppia
+      prenotazione.</li>
+      <li><b>Prima della consegna</b>: test e piccolo set di valutazione del recupero devono passare.</li>
+    </ul>
+  </div>
+
+  <footer>Diagrammi resi con Mermaid via CDN (richiede connessione). Vedi anche
+  <code>ARCHITECTURE.md</code>, <code>DECISIONS.md</code>, <code>ROADMAP.md</code>.</footer>
+
+<script>
+  mermaid.initialize({ startOnLoad:true, theme:'dark',
+    themeVariables:{ fontSize:'14px' }, flowchart:{ htmlLabels:true, curve:'basis' } });
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Ambiente e segreti
+.env
+
+# Dati e indici generati
+*.sqlite
+*.db
+ingestion/data/
+
+# Sistema
+.DS_Store

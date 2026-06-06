@@ -1,0 +1,2 @@
+# Dipendenze solo per l'acquisizione offline dei contenuti (non servono a runtime)
+crawl4ai
