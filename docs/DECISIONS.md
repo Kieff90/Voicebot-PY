@@ -23,6 +23,10 @@ viene vettorizzata e si recuperano i blocchi più vicini per similarità del cos
 Il modello multilingue è una scelta legata alla lingua della conversazione. Un indice FAISS locale è
 sufficiente per la quantità di contenuti di un Comune e non richiede infrastruttura aggiuntiva.
 
+Il modello `multilingual-e5-base` richiede una convenzione precisa: le domande vanno prefissate con
+`query:` e i testi indicizzati con `passage:`, e i vettori vanno normalizzati prima del confronto per
+similarità. Senza questi accorgimenti la qualità del recupero cala.
+
 Per le risposte, il prompt dell'assistente impone di basarsi solo sui passaggi recuperati e di
 dichiarare quando un'informazione non è disponibile, invece di inventarla.
 
@@ -46,6 +50,6 @@ controllo che impedisce la doppia prenotazione dello stesso slot.
 
 ## Strumenti di AI usati
 
-Lo sviluppo è stato assistito da Claude (Anthropic) per la progettazione e la stesura del codice. Gli
+Lo sviluppo è stato assistito da Claude (Anthropic) per la progettazione e la documentazione. Gli
 embedding usano modelli open-source della famiglia sentence-transformers. In esecuzione il backend
 non invia i contenuti a servizi esterni: il recupero avviene in locale.
