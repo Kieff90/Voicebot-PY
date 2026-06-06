@@ -14,7 +14,7 @@ backend (esposto in locale tramite ngrok); il backend risponde e l'assistente pr
 La trascrizione, la sintesi vocale e la formulazione della risposta restano all'assistente; il
 recupero delle informazioni e la gestione degli appuntamenti restano al backend.
 
-Dettagli in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) e [docs/DECISIONS.md](docs/DECISIONS.md).
+Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema) e [docs/ROADMAP.md](docs/ROADMAP.md) (fasi e stato).
 
 ## Stack
 
@@ -57,9 +57,9 @@ Dettagli in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) e [docs/DECISIONS.md](d
 - `backend/` — API FastAPI: recupero informazioni e gestione appuntamenti
 - `ingestion/` — acquisizione e indicizzazione dei contenuti del sito (offline)
 - `vapi/` — configurazione dell'assistente da importare in Vapi
-- `docs/` — architettura, decisioni e piano di sviluppo. `docs/architecture.html` è la versione dei diagrammi apribile nel browser.
+- `docs/` — `BLUEPRINT.md` (design del sistema), `ROADMAP.md` (fasi e stato), `architecture.html` (diagrammi apribili nel browser).
 
 ## Stato
 
-Repository in fase iniziale: contiene architettura, impalcatura e istruzioni. I moduli del backend
-sono in implementazione seguendo `docs/ARCHITECTURE.md`.
+Primo slice backend (prenotazione) implementato e testato. Dettaglio in [docs/ROADMAP.md](docs/ROADMAP.md);
+progettazione in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
