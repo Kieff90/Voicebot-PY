@@ -14,7 +14,7 @@ flowchart LR
   V -- tool: disponibilita --> B
   V -- tool: prenotazione --> B
   B -- risultato --> V
-  B --> R[(Indice FAISS<br/>servizi comunali)]
+  B --> R[(Indice servizi<br/>cosine NumPy)]
   B --> D[(SQLite<br/>appuntamenti)]
   SC[Scraping<br/>crawl4ai] -. offline .-> CB[Corpus building<br/>pulizia + metadata]
   CB -. offline .-> R
@@ -26,7 +26,7 @@ flowchart LR
   voce italiana, instradamento verso i tool.
 - **Backend (FastAPI)**: espone gli endpoint chiamati dai tool. Contiene il recupero semantico dei
   contenuti e la logica degli appuntamenti. Non contiene un modello generativo.
-- **Indice dei servizi (FAISS)**: costruito offline a partire dai contenuti del sito comunale.
+- **Indice dei servizi**: vettori dei contenuti del sito comunale, costruiti offline; la ricerca per similarità del coseno avviene in memoria con NumPy (FAISS resta un'evoluzione se il corpus cresce).
 - **Database appuntamenti (SQLite)**.
 
 ## Dall'acquisizione all'indice (offline)
@@ -39,7 +39,7 @@ La preparazione dei contenuti avviene una volta sola, fuori dal runtime, in due 
   contenuto in italiano e si registra per ogni unità la fonte e la sezione di provenienza.
 
 Il corpus pulito è un artefatto intermedio (testo più metadati). Da lì il contenuto viene diviso in
-blocchi, trasformato in vettori con un modello di embedding multilingue e salvato nell'indice FAISS.
+blocchi, trasformato in vettori con un modello di embedding multilingue e tenuto in memoria per la ricerca di similarità con NumPy.
 
 Pipeline completa: **scraping → corpus building → suddivisione in blocchi → embedding → indice**.
 
