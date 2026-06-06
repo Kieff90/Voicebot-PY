@@ -37,5 +37,7 @@ def query_servizi(envelope: ToolCallEnvelope, rag=Depends(get_rag)):
             top_k=settings.rag_top_k,
             threshold=settings.rag_threshold,
             char_cap=settings.rag_char_cap,
+            telefono=settings.comune_telefono,
+            prenotazione_url=settings.prenotazione_url,
         ),
     )

@@ -103,8 +103,9 @@ Questo è il flusso quando il cittadino chiede, per esempio: "Come funziona la T
    Un embedding è una lista di numeri che rappresenta il significato della frase.
 5. **Il backend cerca i vettori più vicini.** Confronta il vettore della domanda con i vettori dei
    chunk del corpus usando cosine similarity in NumPy.
-6. **Il backend applica una soglia.** Se il risultato migliore è troppo debole, restituisce
-   `{"esito":"non_disponibile"}`: meglio dire che non si sa, invece di inventare.
+6. **Il backend applica una soglia (0.84, tarata su eval set reale).** Se il risultato migliore è
+   troppo debole, restituisce `{"esito":"non_disponibile", "contatto": {...}}` con telefono e link
+   prenotazione: Vapi dice che non ha l'informazione e indirizza al Comune. Meglio che inventare.
 7. **Il backend restituisce i chunk originali.** Non genera una risposta finale; restituisce testo
    compatto + fonte.
 8. **Vapi formula la risposta parlata.** GPT-4o usa solo quei chunk per rispondere al cittadino.

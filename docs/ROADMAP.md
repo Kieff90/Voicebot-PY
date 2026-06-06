@@ -39,9 +39,10 @@ Il contorno (10) è incrementale: esiste sempre una versione dimostrabile.
 
 ## Prossimi step concreti
 
-1. **Scraping Cherasco** (crawl4ai, offline): script `ingestion/scraper_cherasco.py` → lista 26 URL
-   servizi → corpus `data/services_cherasco.jsonl` → rebuild index con E5 reale → taratura soglia
-   (mini eval 8-10 Q&A, misura score cosine reali, scegli cut-off con evidenza).
+1. ~~**Scraping Cherasco**~~ ✅ FATTO: `ingestion/scraper_cherasco.py` (crawl4ai+Playwright) →
+   25 servizi reali → `data/services_cherasco.jsonl` (198 chunk) → index E5 reale verificato →
+   soglia tarata a **0.84** su eval di 15 Q&A. Nota: la CIE non è una scheda sul sito di Cherasco
+   (gap di contenuto): quelle domande cadono nel fallback contatti, non in una risposta sbagliata.
 2. **Wiring Vapi** (config manuale, consuma crediti → mirato): `ngrok http 8000` → riallineare
    l'assistant al Comune Cherasco (Deepgram `it`, GPT-4o, voce IT, system prompt) → collegare i 3
    tool API Request agli endpoint `/tools/*` → test breve → export `vapi/assistant.json`.

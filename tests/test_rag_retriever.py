@@ -29,8 +29,13 @@ def test_out_of_domain_query_below_threshold_is_not_available():
     result = query_servizi(
         _index(), FakeEmbedder(), {"domanda": "che tempo fa oggi"},
         top_k=3, threshold=0.3, char_cap=2000,
+        telefono="0172.427010", prenotazione_url="https://esempio",
     )
-    assert result == {"esito": "non_disponibile"}
+    assert result["esito"] == "non_disponibile"
+    assert result["contatto"] == {
+        "telefono": "0172.427010",
+        "prenotazione_url": "https://esempio",
+    }
 
 
 def test_malformed_arguments_return_errore():

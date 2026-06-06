@@ -21,6 +21,8 @@ def query_servizi(
     top_k: int,
     threshold: float,
     char_cap: int,
+    telefono: str = "",
+    prenotazione_url: str = "",
 ) -> dict[str, Any]:
     try:
         req = QueryRequest(**arguments)
@@ -29,7 +31,12 @@ def query_servizi(
 
     hits = index.search(embedder.embed_query(req.domanda), top_k)
     if not hits or hits[0][0] < threshold:
-        return {"esito": "non_disponibile"}
+        # Informazione non nel corpus: il backend fornisce i contatti, Vapi
+        # formula la frase ("non ho questa informazione, contatta il Comune...").
+        return {
+            "esito": "non_disponibile",
+            "contatto": {"telefono": telefono, "prenotazione_url": prenotazione_url},
+        }
 
     risultati: list[dict[str, str]] = []
     used = 0
