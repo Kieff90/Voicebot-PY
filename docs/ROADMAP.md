@@ -9,7 +9,7 @@ aggiungono qualità e contorno.
 2. Endpoint appuntamenti: verifica disponibilità e creazione, secondo il contratto dei tool.
 3. Persistenza su SQLite, con controllo anti doppia prenotazione.
 4. Scraping del sito comunale e costruzione del corpus pulito.
-5. Recupero semantico (embedding multilingue + FAISS) ed endpoint di interrogazione dei servizi.
+5. Recupero semantico (embedding multilingue + cosine in NumPy) ed endpoint di interrogazione dei servizi.
 6. Collegamento dei tool all'assistente Vapi tramite ngrok.
 7. Configurazione dell'assistente in italiano: trascrizione, voce, prompt di sistema.
 8. Gestione dei casi limite nel prompt e nel backend.
