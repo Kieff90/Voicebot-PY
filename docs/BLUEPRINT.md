@@ -1,4 +1,4 @@
-# Blueprint — Voicebot servizi comunali (Comune di Codroipo)
+# Blueprint — Voicebot servizi comunali (Comune di Cherasco)
 
 > Come è progettato il sistema: cosa fa, architettura, componenti, flussi, modello dati,
 > approccio RAG, decisioni tecniche e motivazioni. Documento di riferimento unico.
@@ -6,7 +6,7 @@
 
 ## 1. Cosa fa
 
-Assistente vocale in italiano per i servizi del Comune di Codroipo. Due casi d'uso:
+Assistente vocale in italiano per i servizi del Comune di Cherasco. Due casi d'uso:
 
 1. **Q&A sui servizi comunali** — il cittadino chiede informazioni; l'assistente risponde sulla base
    dei contenuti del sito comunale (recupero semantico).
@@ -240,7 +240,7 @@ il miglioramento naturale è salvare l'indice su file (`.npz`) o passare a FAISS
 **Scelte concrete:**
 | Componente | Scelta | Perché |
 |---|---|---|
-| Ingestion | **crawl4ai** | scraping mirato del sito di Codroipo (lista URL, non crawler profondo) |
+| Ingestion | **crawl4ai** | scraping mirato del sito di Cherasco (lista URL, non crawler profondo) |
 | Chunking | ~250-350 token, overlap ~10%, con metadata (fonte/sezione) | chunk corti = risposte vocali mirate; valori di partenza, da validare sull'eval set |
 | Embedding | `intfloat/multilingual-e5-base` (o `BAAI/bge-m3`) | multilingue/italiano, open-source, locale. Dep pesante (~400MB): caricare il modello all'avvio |
 | Indice | **cosine in NumPy, in memoria** | ~100 chunk di un Comune → scan lineare esatto e istantaneo. FAISS = upgrade quando il corpus cresce (right-sizing) |
@@ -263,7 +263,7 @@ Il tool non risponde con una frase pronta. Risponde con materiale verificabile:
   "risultati": [
     {
       "testo": "Tassa sui rifiuti (TARI)...",
-      "fonte": "Comune di Codroipo - Ufficio Tributi"
+      "fonte": "Comune di Cherasco - Ufficio Tributi"
     }
   ]
 }

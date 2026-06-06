@@ -5,25 +5,26 @@ qualità e contorno. Per il *come* è progettato il sistema vedi [BLUEPRINT.md](
 
 ## Stato attuale (2026-06-06)
 
-**Primo slice backend (prenotazione) implementato in TDD e su `main`.** 25 test verdi; smoke reale OK
-(prenotazione → codice di conferma → stesso slot rifiutato → disponibilità aggiornata).
+**Slice backend prenotazione + RAG corpus statico implementati in TDD e su `main`.** 46 test verdi.
 
-Implementato in `backend/app/`: FastAPI + `/health` · adapter contratto Vapi
-(`toolCallList`↔`results[]`) · SQLite con `UNIQUE(servizio,data,ora)` anti doppia-prenotazione ·
-service appuntamenti (`disponibilita` + `crea_appuntamento`, tutti gli edge case) · endpoint
-`/tools/disponibilita` e `/tools/crea_appuntamento` · dependency injection del repository
-(override-abile nei test). Ambiente: Python 3.11 (`.venv`).
+Slice prenotazione: FastAPI + `/health` · adapter contratto Vapi (`toolCallList`↔`results[]`) ·
+SQLite `UNIQUE(servizio,data,ora)` anti doppia-prenotazione · service appuntamenti · endpoint
+`/tools/disponibilita` e `/tools/crea_appuntamento` · dependency injection del repository.
 
-> Slice **volutamente senza RAG** (`query_servizi`) e **senza wiring Vapi**, solo per ora: **non è la
-> consegna finale.**
+Slice RAG corpus statico: endpoint `/tools/query_servizi` · `Chunk` immutabile con metadati
+(servizio/sezione/fonte/aggiornato) · `embed_text()` con prefisso disambiguante · indice cosine
+NumPy · gate soglia · cap caratteri · `FakeEmbedder` deterministico per i test · corpus
+`data/fallback_services.jsonl` (servizi reali SUAP Cherasco, 8 sezioni). Ambiente: Python 3.11.
+
+> Senza scraping completo (26 servizi Cherasco) e senza wiring Vapi: **non è la consegna finale.**
 
 ## Fasi
 
 1. ✅ Impalcatura backend: FastAPI, configurazione, avvio locale.
 2. ✅ Endpoint appuntamenti: verifica disponibilità e creazione, secondo il contratto dei tool.
 3. ✅ Persistenza su SQLite, con controllo anti doppia prenotazione.
-4. ⬜ Scraping del sito comunale e costruzione del corpus pulito.
-5. ⬜ Recupero semantico (embedding multilingue + cosine in NumPy) ed endpoint `query_servizi`.
+4. ⬜ Scraping del sito comunale e costruzione del corpus completo (26 servizi Cherasco).
+5. ✅ Recupero semantico (embedding multilingue + cosine in NumPy) ed endpoint `query_servizi` — corpus statico ok, scraping da completare.
 6. ⬜ Collegamento dei tool all'assistente Vapi tramite ngrok.
 7. ⬜ Configurazione dell'assistente in italiano: trascrizione, voce, prompt di sistema.
 8. ⬜ Gestione dei casi limite nel prompt e nel backend.
@@ -38,12 +39,12 @@ Il contorno (10) è incrementale: esiste sempre una versione dimostrabile.
 
 ## Prossimi step concreti
 
-1. **Wiring Vapi** (config manuale, consuma crediti → mirato): `ngrok http 8000` → riallineare
-   l'assistant al Comune (Deepgram `it`, GPT-4o, voce IT, system prompt) → collegare i 2 tool API
-   Request agli endpoint `/tools/*` → test breve (chiedi slot, prenota, ritenta stesso slot) →
-   export `vapi/assistant.json` (chiavi/ID rimossi).
-2. **Slice RAG**: `query_servizi` con **fallback statico prima**, poi scraping crawl4ai → corpus →
-   embedding → cosine NumPy. Qui si installano `sentence-transformers` + `numpy` (rinviati apposta).
+1. **Scraping Cherasco** (crawl4ai, offline): script `ingestion/scraper_cherasco.py` → lista 26 URL
+   servizi → corpus `data/services_cherasco.jsonl` → rebuild index con E5 reale → taratura soglia
+   (mini eval 8-10 Q&A, misura score cosine reali, scegli cut-off con evidenza).
+2. **Wiring Vapi** (config manuale, consuma crediti → mirato): `ngrok http 8000` → riallineare
+   l'assistant al Comune Cherasco (Deepgram `it`, GPT-4o, voce IT, system prompt) → collegare i 3
+   tool API Request agli endpoint `/tools/*` → test breve → export `vapi/assistant.json`.
 
 ## Riferimenti operativi
 

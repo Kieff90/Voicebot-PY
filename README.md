@@ -1,4 +1,4 @@
-# Voicebot servizi comunali — Comune di Codroipo
+# Voicebot servizi comunali — Comune di Cherasco
 
 Assistente vocale in italiano che aiuta un cittadino a ottenere informazioni sui servizi del Comune
 e a prenotare un appuntamento a uno sportello.
