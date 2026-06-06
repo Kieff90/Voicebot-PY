@@ -20,7 +20,7 @@ Dettagli in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) e [docs/DECISIONS.md](d
 
 - Vapi: trascrizione (Deepgram), modello linguistico (GPT-4o), voce italiana
 - Python, FastAPI
-- Recupero semantico: sentence-transformers + FAISS
+- Recupero semantico: sentence-transformers + cosine in NumPy (FAISS come upgrade se il corpus cresce)
 - Appuntamenti: SQLite
 - Acquisizione contenuti del sito comunale: crawl4ai (offline)
 - Esposizione locale: ngrok

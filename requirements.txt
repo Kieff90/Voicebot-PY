@@ -3,4 +3,5 @@ uvicorn[standard]
 pydantic
 python-dotenv
 sentence-transformers
-faiss-cpu
+numpy
+# faiss-cpu  # solo per l'upgrade dell'indice se il corpus cresce; la prima implementazione usa cosine in NumPy

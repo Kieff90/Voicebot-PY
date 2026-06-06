@@ -15,13 +15,19 @@ seconda chiamata a un modello generativo, con un risparmio di latenza e di costo
 
 ## Recupero delle informazioni
 
-I contenuti del sito comunale vengono acquisiti una volta, divisi in blocchi di circa 400 token con
-una sovrapposizione del 15 per cento, e trasformati in vettori con un modello di embedding multilingue
-(`multilingual-e5-base`). I vettori sono salvati in un indice FAISS locale. A ogni domanda la domanda
-viene vettorizzata e si recuperano i blocchi più vicini per similarità del coseno.
+I contenuti del sito comunale vengono acquisiti una volta, divisi in blocchi di circa 300 token con
+una sovrapposizione del 10 per cento, e trasformati in vettori con un modello di embedding multilingue
+(`multilingual-e5-base`). A ogni domanda la domanda viene vettorizzata e si recuperano i blocchi più
+vicini per similarità del coseno, restituendone al massimo tre.
 
-Il modello multilingue è una scelta legata alla lingua della conversazione. Un indice FAISS locale è
-sufficiente per la quantità di contenuti di un Comune e non richiede infrastruttura aggiuntiva.
+Per la quantità di contenuti di un Comune (un centinaio di blocchi) il confronto avviene in memoria con
+NumPy: una scansione lineare è esatta, istantanea e si legge in poche righe, senza dipendenze
+aggiuntive. Un indice FAISS resta come possibile evoluzione quando il corpus cresce, non come scelta di
+partenza. Il modello multilingue è invece legato alla lingua della conversazione.
+
+Per proteggere la demo, accanto al corpus acquisito è previsto un piccolo insieme di servizi curato a
+mano (`fallback_services.jsonl`): se lo scraping o l'indice non sono disponibili al momento della
+chiamata, l'assistente risponde comunque sui servizi principali.
 
 Il modello `multilingual-e5-base` richiede una convenzione precisa: le domande vanno prefissate con
 `query:` e i testi indicizzati con `passage:`, e i vettori vanno normalizzati prima del confronto per
