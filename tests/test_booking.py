@@ -38,3 +38,51 @@ def test_disponibilita_full_day(repo):
 def test_disponibilita_rejects_bad_input(repo):
     out = booking.disponibilita(repo, {"servizio": "anagrafe", "data": "01/12/2026"}, SLOT_HOURS)
     assert out["esito"] == "errore"
+
+
+from datetime import date, timedelta
+
+
+def test_crea_appuntamento_success(repo):
+    out = booking.crea_appuntamento(
+        repo,
+        {"servizio": "anagrafe", "data": "2026-12-01", "ora": "09:00", "nome": "Mario"},
+        SLOT_HOURS,
+    )
+    assert out["esito"] == "confermato"
+    assert len(out["codice"]) == 8
+    assert repo.booked_slots("anagrafe", "2026-12-01") == {"09:00"}
+
+
+def test_crea_appuntamento_double_booking(repo):
+    args = {"servizio": "anagrafe", "data": "2026-12-01", "ora": "09:00", "nome": "Mario"}
+    booking.crea_appuntamento(repo, args, SLOT_HOURS)
+    out = booking.crea_appuntamento(repo, {**args, "nome": "Luigi"}, SLOT_HOURS)
+    assert out["esito"] == "errore"
+    assert "non disponibile" in out["motivo"]
+
+
+def test_crea_appuntamento_slot_not_in_grid(repo):
+    out = booking.crea_appuntamento(
+        repo,
+        {"servizio": "anagrafe", "data": "2026-12-01", "ora": "15:00", "nome": "Mario"},
+        SLOT_HOURS,
+    )
+    assert out["esito"] == "errore"
+
+
+def test_crea_appuntamento_past_date(repo):
+    ieri = (date.today() - timedelta(days=1)).isoformat()
+    out = booking.crea_appuntamento(
+        repo,
+        {"servizio": "anagrafe", "data": ieri, "ora": "09:00", "nome": "Mario"},
+        SLOT_HOURS,
+    )
+    assert out["esito"] == "errore"
+
+
+def test_crea_appuntamento_missing_field(repo):
+    out = booking.crea_appuntamento(
+        repo, {"servizio": "anagrafe", "data": "2026-12-01", "ora": "09:00"}, SLOT_HOURS
+    )
+    assert out["esito"] == "errore"
