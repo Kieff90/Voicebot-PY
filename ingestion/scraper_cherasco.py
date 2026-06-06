@@ -1,9 +1,7 @@
 """
-Scraper offline per i servizi del Comune di Cherasco.
+Scraper per i servizi del Comune di Cherasco.
 
 Uso:
-    pip install -r requirements-ingestion.txt
-    crawl4ai-setup          # installa Playwright/Chromium (una tantum)
     python ingestion/scraper_cherasco.py
 
 Output: data/services_cherasco.jsonl  (un chunk per riga, formato identico a fallback_services.jsonl)
@@ -50,7 +48,6 @@ def _estrai_sezioni(html: str, nome_servizio: str, url_fonte: str) -> list[dict]
     chunks: list[dict] = []
 
     for sezione in SEZIONI_AGID:
-        # Cerca heading (h2/h3/h4) che contiene il nome della sezione
         heading = soup.find(
             lambda tag: tag.name in ("h2", "h3", "h4")
             and sezione.lower() in tag.get_text(strip=True).lower()
@@ -58,7 +55,6 @@ def _estrai_sezioni(html: str, nome_servizio: str, url_fonte: str) -> list[dict]
         if not heading:
             continue
 
-        # Raccoglie il testo dei paragrafi successivi fino al prossimo heading
         testi: list[str] = []
         for sibling in heading.find_next_siblings():
             if sibling.name in ("h2", "h3", "h4"):
@@ -98,33 +94,51 @@ async def _scrapa_servizio(crawler, url: str, nome: str) -> list[dict]:
 
 async def _lista_servizi(crawler) -> list[tuple[str, str]]:
     """
-    Restituisce lista di (url_assoluto, nome_servizio) dalla pagina elenco.
-    Il sito carica le card via JS — usiamo crawl4ai per il rendering completo.
+    Restituisce lista di (url_assoluto, nome_servizio) unici.
+    Raccoglie i link /servizi/faq/NNN/ dalla pagina principale
+    e da tutte le pagine categoria /servizio/NNN/.
     """
     from bs4 import BeautifulSoup
     from crawl4ai import CrawlerRunConfig
 
-    result = await crawler.arun(
-        SERVIZI_URL, config=CrawlerRunConfig(wait_until="networkidle")
-    )
+    cfg = CrawlerRunConfig(wait_until="networkidle")
+
+    # Carica pagina principale
+    result = await crawler.arun(SERVIZI_URL, config=cfg)
     if not result.success:
         print("ERRORE: impossibile caricare la pagina dei servizi", file=sys.stderr)
         return []
 
-    soup = BeautifulSoup(result.html, "html.parser")
-    servizi: list[tuple[str, str]] = []
-    seen: set[str] = set()
+    soup_main = BeautifulSoup(result.html, "html.parser")
 
-    for a in soup.find_all("a", href=True):
-        href: str = a["href"]
-        nome = _normalizza(a.get_text())
-        # I singoli servizi hanno href tipo /scheda/NNN/nome-servizio
-        if not re.match(r"^/scheda/\d+/", href) or href in seen:
-            continue
-        seen.add(href)
-        servizi.append((BASE_URL + href, nome))
+    # Raccoglie URL categorie /servizio/NNN/
+    categorie: set[str] = set()
+    for a in soup_main.find_all("a", href=True):
+        if re.match(r"^/servizio/\d+/", a["href"]):
+            categorie.add(a["href"])
 
-    print(f"Trovati {len(servizi)} servizi nella pagina elenco")
+    # Funzione helper per estrarre link faq da un soup
+    def _faq_da_soup(s) -> dict[str, str]:
+        faq: dict[str, str] = {}
+        for a in s.find_all("a", href=True):
+            href = a["href"]
+            if re.match(r"^/servizi/faq/\d+/", href):
+                nome = _normalizza(a.get_text())
+                if nome:
+                    faq[href] = nome
+        return faq
+
+    # Raccoglie faq dalla pagina principale
+    tutti: dict[str, str] = _faq_da_soup(soup_main)
+
+    # Raccoglie faq da ogni categoria
+    for cat in sorted(categorie):
+        r = await crawler.arun(BASE_URL + cat, config=cfg)
+        if r.success:
+            tutti.update(_faq_da_soup(BeautifulSoup(r.html, "html.parser")))
+
+    servizi = [(BASE_URL + href, nome) for href, nome in tutti.items()]
+    print(f"Trovati {len(servizi)} servizi")
     return servizi
 
 
@@ -136,7 +150,7 @@ async def main() -> None:
     async with AsyncWebCrawler() as crawler:
         servizi = await _lista_servizi(crawler)
         if not servizi:
-            print("Nessun servizio trovato. Controlla il selettore HTML.", file=sys.stderr)
+            print("Nessun servizio trovato.", file=sys.stderr)
             sys.exit(1)
 
         all_chunks: list[dict] = []
