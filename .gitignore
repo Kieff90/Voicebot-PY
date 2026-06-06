@@ -15,5 +15,6 @@ ingestion/data/
 # Sistema
 .DS_Store
 
-# DB locale generato a runtime
-data/
+# DB locale generato a runtime (ma il corpus statico curato va versionato)
+data/*
+!data/fallback_services.jsonl
