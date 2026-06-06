@@ -39,6 +39,13 @@ def query_servizi(
         testo = chunk.text[: char_cap - used]
         if not testo:
             break
-        risultati.append({"testo": testo, "fonte": chunk.fonte})
+        risultati.append(
+            {
+                "servizio": chunk.servizio,
+                "sezione": chunk.sezione,
+                "testo": testo,
+                "fonte": chunk.fonte,
+            }
+        )
         used += len(testo)
     return {"esito": "ok", "risultati": risultati}

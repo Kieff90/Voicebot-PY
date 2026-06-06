@@ -33,5 +33,5 @@ class ServicesIndex:
 
 def build_index(chunks: list[Chunk], embedder: Embedder) -> ServicesIndex:
     """Costruisce l'indice vettorizzando i passaggi tramite l'embedder."""
-    matrix = embedder.embed_passages([c.text for c in chunks])
+    matrix = embedder.embed_passages([c.embed_text() for c in chunks])
     return ServicesIndex(matrix, chunks)

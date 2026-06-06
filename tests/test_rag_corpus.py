@@ -13,33 +13,44 @@ def test_load_chunks_parses_each_line(tmp_path):
     path = _write(
         tmp_path,
         [
-            '{"testo": "Anagrafe: residenza e certificati.", "fonte": "Comune - Anagrafe"}',
-            '{"testo": "Tributi: TARI e IMU.", "fonte": "Comune - Tributi"}',
+            '{"testo": "residenza e certificati", "servizio": "Anagrafe", "sezione": "Descrizione", "fonte": "url1", "aggiornato": "2025-09-30"}',
+            '{"testo": "TARI e IMU", "servizio": "Tributi", "sezione": "Descrizione", "fonte": "url2"}',
         ],
     )
     chunks = load_chunks(path)
-    assert chunks == [
-        Chunk(text="Anagrafe: residenza e certificati.", fonte="Comune - Anagrafe"),
-        Chunk(text="Tributi: TARI e IMU.", fonte="Comune - Tributi"),
-    ]
+    assert chunks[0] == Chunk(
+        text="residenza e certificati",
+        servizio="Anagrafe",
+        sezione="Descrizione",
+        fonte="url1",
+        aggiornato="2025-09-30",
+    )
+    assert chunks[1] == Chunk(
+        text="TARI e IMU", servizio="Tributi", sezione="Descrizione", fonte="url2"
+    )
+    assert chunks[1].aggiornato == ""  # opzionale
 
 
 def test_load_chunks_skips_blank_lines(tmp_path):
     path = _write(
         tmp_path,
         [
-            '{"testo": "uno", "fonte": "a"}',
+            '{"testo": "uno", "servizio": "A", "sezione": "S", "fonte": "a"}',
             "",
             "   ",
-            '{"testo": "due", "fonte": "b"}',
+            '{"testo": "due", "servizio": "B", "sezione": "S", "fonte": "b"}',
         ],
     )
-    chunks = load_chunks(path)
-    assert len(chunks) == 2
+    assert len(load_chunks(path)) == 2
+
+
+def test_embed_text_includes_service_and_section():
+    chunk = Chunk(text="verifica i costi sul portale", servizio="SUAP", sezione="Quanto costa", fonte="x")
+    assert chunk.embed_text() == "SUAP — Quanto costa: verifica i costi sul portale"
 
 
 def test_chunk_is_immutable():
-    chunk = Chunk(text="x", fonte="y")
+    chunk = Chunk(text="x", servizio="s", sezione="z", fonte="y")
     try:
         chunk.text = "z"  # type: ignore[misc]
     except Exception as exc:  # frozen dataclass raises FrozenInstanceError
@@ -51,4 +62,4 @@ def test_chunk_is_immutable():
 def test_real_fallback_corpus_loads():
     chunks = load_chunks("data/fallback_services.jsonl")
     assert len(chunks) >= 6
-    assert all(c.text and c.fonte for c in chunks)
+    assert all(c.text and c.servizio and c.sezione and c.fonte for c in chunks)

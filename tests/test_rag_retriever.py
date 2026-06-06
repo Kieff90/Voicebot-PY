@@ -4,9 +4,9 @@ from backend.app.services.rag.retriever import query_servizi
 from tests.fakes import FakeEmbedder
 
 _CHUNKS = [
-    Chunk(text="anagrafe residenza certificato", fonte="anagrafe"),
-    Chunk(text="tributi tari rifiuti imu", fonte="tributi"),
-    Chunk(text="carta identita", fonte="cie"),
+    Chunk(text="residenza certificato", servizio="Anagrafe", sezione="Descrizione", fonte="anagrafe"),
+    Chunk(text="tari rifiuti", servizio="Tributi", sezione="Descrizione", fonte="tributi"),
+    Chunk(text="carta identita", servizio="Carta identita", sezione="Descrizione", fonte="cie"),
 ]
 
 
@@ -21,6 +21,8 @@ def test_in_domain_query_returns_relevant_chunk():
     )
     assert result["esito"] == "ok"
     assert result["risultati"][0]["fonte"] == "tributi"
+    assert result["risultati"][0]["servizio"] == "Tributi"
+    assert result["risultati"][0]["sezione"] == "Descrizione"
 
 
 def test_out_of_domain_query_below_threshold_is_not_available():
@@ -41,7 +43,6 @@ def test_malformed_arguments_return_errore():
 
 
 def test_only_hits_above_threshold_are_included():
-    # soglia alta: solo il match forte (tributi) passa, non i parziali
     result = query_servizi(
         _index(), FakeEmbedder(), {"domanda": "tari rifiuti"},
         top_k=3, threshold=0.6, char_cap=2000,

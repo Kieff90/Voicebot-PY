@@ -8,7 +8,7 @@ def _envelope(arguments, call_id="q1"):
 
 
 def test_query_servizi_returns_results_envelope(client):
-    resp = client.post("/tools/query_servizi", json=_envelope({"domanda": "tari rifiuti"}))
+    resp = client.post("/tools/query_servizi", json=_envelope({"domanda": "tributi tari rifiuti"}))
     assert resp.status_code == 200
     body = resp.json()
     assert body["results"][0]["toolCallId"] == "q1"
@@ -19,6 +19,6 @@ def test_query_servizi_returns_results_envelope(client):
 
 def test_query_servizi_accepts_arguments_as_json_string(client):
     # Vapi a volte invia arguments come stringa JSON
-    resp = client.post("/tools/query_servizi", json=_envelope('{"domanda": "tari rifiuti"}'))
+    resp = client.post("/tools/query_servizi", json=_envelope('{"domanda": "tributi tari rifiuti"}'))
     assert resp.status_code == 200
     assert resp.json()["results"][0]["result"]["esito"] == "ok"

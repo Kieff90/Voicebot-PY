@@ -12,9 +12,9 @@ from backend.app.services.rag.index import build_index
 from tests.fakes import FakeEmbedder
 
 _FAKE_CHUNKS = [
-    Chunk(text="anagrafe residenza certificato", fonte="anagrafe"),
-    Chunk(text="carta identita", fonte="cie"),
-    Chunk(text="tari rifiuti", fonte="tributi"),
+    Chunk(text="residenza certificato", servizio="Anagrafe", sezione="Descrizione", fonte="anagrafe"),
+    Chunk(text="carta identita", servizio="Carta identita", sezione="Descrizione", fonte="cie"),
+    Chunk(text="tari rifiuti", servizio="Tributi", sezione="Descrizione", fonte="tributi"),
 ]
 
 
