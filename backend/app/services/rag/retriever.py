@@ -9,12 +9,13 @@ from typing import Any
 from pydantic import ValidationError
 
 from backend.app.models.rag import QueryRequest
+from backend.app.services.rag.embedder import Embedder
 from backend.app.services.rag.index import ServicesIndex
 
 
 def query_servizi(
     index: ServicesIndex,
-    embedder,
+    embedder: Embedder,
     arguments: dict[str, Any],
     *,
     top_k: int,

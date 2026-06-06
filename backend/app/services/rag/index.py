@@ -8,6 +8,7 @@ il coseno coincide con il prodotto scalare.
 import numpy as np
 
 from backend.app.services.rag.corpus import Chunk
+from backend.app.services.rag.embedder import Embedder
 
 
 def _normalize(matrix: np.ndarray) -> np.ndarray:
@@ -30,7 +31,7 @@ class ServicesIndex:
         return [(float(scores[i]), self._chunks[i]) for i in order]
 
 
-def build_index(chunks: list[Chunk], embedder) -> ServicesIndex:
+def build_index(chunks: list[Chunk], embedder: Embedder) -> ServicesIndex:
     """Costruisce l'indice vettorizzando i passaggi tramite l'embedder."""
     matrix = embedder.embed_passages([c.text for c in chunks])
     return ServicesIndex(matrix, chunks)

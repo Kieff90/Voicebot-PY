@@ -32,6 +32,8 @@ flowchart LR
   B -- results --> V
   B --> R[(Indice servizi<br/>cosine NumPy)]
   B --> D[(SQLite<br/>appuntamenti)]
+  FS[(fallback_services.jsonl<br/>chunk testuali)]
+  FS --> R
   SC[Scraping<br/>crawl4ai] -. offline .-> CB[Corpus building<br/>pulizia + metadata]
   CB -. offline .-> R
 ```
@@ -41,12 +43,28 @@ flowchart LR
   instradamento verso i tool.
 - **Backend (FastAPI):** espone gli endpoint chiamati dai tool. Contiene recupero semantico e logica
   appuntamenti. Nessun modello generativo.
-- **Indice dei servizi:** vettori dei contenuti del sito, costruiti offline; ricerca per similarità
-  del coseno in memoria con NumPy (FAISS resta un'evoluzione se il corpus cresce).
-- **Database appuntamenti (SQLite).**
+- **Corpus servizi (`fallback_services.jsonl`):** file testuale con i blocchi informativi minimi
+  sui servizi comunali. Ogni riga contiene testo + fonte. È il fallback iniziale per la demo.
+- **Indice dei servizi:** matrice di vettori costruita dal backend a partire dal corpus; resta in
+  memoria RAM e viene interrogata con cosine similarity in NumPy. Non è SQLite, non è Supabase e non
+  è un vector database esterno. FAISS resta un'evoluzione se il corpus cresce.
+- **Database appuntamenti (SQLite):** salva solo appuntamenti, codici di conferma e slot occupati.
 
 Il confine netto rende **tutta** la logica (RAG, regole, persistenza) testabile in isolamento e
 indipendente dal vendor vocale.
+
+### Lettura semplice dell'architettura
+
+Ci sono due memorie diverse:
+
+| Memoria | Cosa contiene | Dove vive | Quando viene usata |
+|---|---|---|---|
+| **SQLite** | appuntamenti prenotati | file locale `data/appointments.db` | quando Vapi chiede disponibilità o crea un appuntamento |
+| **Indice servizi** | vettori dei testi comunali + riferimento al testo originale | RAM del backend, costruito all'avvio | quando Vapi chiama `query_servizi` |
+
+Il backend non "decodifica" i vettori in parole. Ogni vettore resta collegato al suo testo originale:
+quando il backend trova un vettore simile alla domanda, recupera il **chunk testuale originale** e lo
+manda a Vapi. Vapi usa GPT-4o per trasformare quei chunk in una risposta parlata.
 
 ## 3. Flussi
 
@@ -74,10 +92,22 @@ sequenceDiagram
 ```
 
 ### Recupero informazioni (runtime)
-La domanda viene vettorizzata, si recuperano i blocchi più vicini per similarità del coseno, si
-applica una **soglia**; se il punteggio migliore è sotto soglia l'assistente dichiara che
-l'informazione non è disponibile invece di inventarla. I blocchi recuperati tornano all'assistente,
-che formula la risposta parlata.
+
+Questo è il flusso quando il cittadino chiede, per esempio: "Come funziona la TARI?"
+
+1. **Il cittadino parla.** Vapi trascrive la frase in testo.
+2. **Vapi sceglie il tool `query_servizi`.** Invia al backend la domanda dentro il contratto
+   `toolCallList`.
+3. **Il backend valida la domanda.** Se manca o è malformata, restituisce errore dentro `results[]`.
+4. **Il backend crea l'embedding della domanda.** Usa un modello di embedding locale, non GPT-4o.
+   Un embedding è una lista di numeri che rappresenta il significato della frase.
+5. **Il backend cerca i vettori più vicini.** Confronta il vettore della domanda con i vettori dei
+   chunk del corpus usando cosine similarity in NumPy.
+6. **Il backend applica una soglia.** Se il risultato migliore è troppo debole, restituisce
+   `{"esito":"non_disponibile"}`: meglio dire che non si sa, invece di inventare.
+7. **Il backend restituisce i chunk originali.** Non genera una risposta finale; restituisce testo
+   compatto + fonte.
+8. **Vapi formula la risposta parlata.** GPT-4o usa solo quei chunk per rispondere al cittadino.
 
 ### Dall'acquisizione all'indice (offline, una volta)
 ```
@@ -86,6 +116,18 @@ scraping (crawl4ai) → corpus building (pulizia, dedup, metadata fonte/sezione)
 ```
 Lo **scraping** estrae il contenuto grezzo; il **corpus building** lo trasforma in una base testuale
 pulita e taggata (artefatto intermedio da cui si fa il chunking). Sono due step distinti.
+
+Nella prima versione il corpus nasce da `data/fallback_services.jsonl`: è già composto da pochi
+chunk curati a mano per rendere la demo stabile. Lo scraping con crawl4ai serve nello step successivo
+per sostituire o ampliare quel fallback con contenuti presi dal sito del Comune.
+
+| Step | Chi lo fa | Output |
+|---|---|---|
+| Scraping | script offline in `ingestion/` | pagine grezze dal sito |
+| Corpus building | script offline in `ingestion/` | testo pulito con fonte/sezione |
+| Chunking | script offline in `ingestion/` oppure fallback statico già chunkato | blocchi brevi, circa 250-350 token |
+| Embedding dei chunk | backend all'avvio, tramite `services/rag/embedder.py` | matrice di vettori |
+| Ricerca | backend a runtime, tramite `services/rag/index.py` e `retriever.py` | top chunk più pertinenti |
 
 ## 4. Contratto dei tool
 
@@ -130,9 +172,10 @@ backend/app/
 │   └── tools.py            # POST /tools/disponibilita · /crea_appuntamento · /query_servizi
 ├── models/                 # Pydantic = validazione al confine
 │   ├── vapi.py             #   ToolCall, ToolCallEnvelope
-│   └── appointment.py      #   AvailabilityRequest, AppointmentRequest
+│   ├── appointment.py      #   AvailabilityRequest, AppointmentRequest
+│   └── rag.py              #   QueryRequest per query_servizi
 ├── services/               # IL CUORE (logica pura, zero HTTP/Vapi)
-│   ├── rag/                #   embedder · index · retriever
+│   ├── rag/                #   corpus · embedder · index · retriever
 │   └── appointments/       #   repository.py (Repository Pattern) · booking.py
 └── db/                     # schema.sql · session.py (SQLite)
 
@@ -152,6 +195,7 @@ Validazione Pydantic al confine: non ci si fida dell'input dell'LLM (campi manca
 | `ToolCallEnvelope` | `message.toolCallList[]` | parsing payload Vapi; `arguments` accettato come oggetto **o** stringa JSON |
 | `AvailabilityRequest` | `servizio`, `data` | valida data ISO |
 | `AppointmentRequest` | `servizio`, `data`, `ora`, `nome` | valida data ISO + ora `HH:MM`; rifiuta input incompleto |
+| `QueryRequest` | `domanda` | valida il tool `query_servizi`; rifiuta domanda mancante o non testuale |
 
 **Tabella `appointments` (SQLite):** `id`, `codice` (UNIQUE), `servizio`, `data`, `ora`, `nome`,
 `stato`, `created_at`, con **`UNIQUE(servizio, data, ora)`**. Il vincolo unico è il lock atomico
@@ -162,6 +206,36 @@ anti doppia-prenotazione: la garanzia sta nel database, non nel codice.
 L'LLM generativo è già in Vapi (GPT-4o); il backend fa **solo recupero** e restituisce i chunk
 rilevanti come `result`. → Meno latenza, meno costo, meno codice: si saltano gli step
 "generation/serving" della teoria RAG.
+
+### Cosa significa "embedding" qui
+
+Il modello di embedding non conversa e non scrive risposte. Fa solo una trasformazione:
+
+```text
+testo → vettore numerico
+```
+
+Usiamo lo stesso tipo di trasformazione in due momenti:
+
+1. **All'avvio del backend:** i chunk dei servizi diventano vettori e vengono tenuti in memoria.
+2. **A ogni domanda:** la domanda del cittadino diventa un vettore temporaneo, usato solo per cercare.
+
+La domanda dell'utente non viene salvata nel database. Serve solo come input momentaneo per trovare i
+chunk più simili.
+
+### Dove sono salvati i vettori
+
+Nella prima implementazione non c'è un database vettoriale. I dati sono separati così:
+
+| Dato | Persistenza |
+|---|---|
+| Testi dei servizi | `data/fallback_services.jsonl` o corpus generato offline |
+| Vettori dei servizi | RAM del backend, ricostruiti all'avvio |
+| Appuntamenti | SQLite |
+
+Questa scelta è intenzionale: per 6-10 chunk di fallback, o anche circa 100 chunk di un Comune, una
+matrice NumPy in memoria è più semplice di Supabase, FAISS o un vector DB. Se il corpus cresce molto,
+il miglioramento naturale è salvare l'indice su file (`.npz`) o passare a FAISS.
 
 **Scelte concrete:**
 | Componente | Scelta | Perché |
@@ -178,6 +252,25 @@ rilevanti come `result`. → Meno latenza, meno costo, meno codice: si saltano g
 > **Disciplina E5** (con `multilingual-e5-base`): prefissare `query:` per le domande e `passage:` per
 > i testi indicizzati, e **normalizzare** (L2) gli embedding prima della cosine. Saltarlo degrada il
 > recupero. Con `bge-m3` i prefissi non servono.
+
+### Output di `query_servizi`
+
+Il tool non risponde con una frase pronta. Risponde con materiale verificabile:
+
+```json
+{
+  "esito": "ok",
+  "risultati": [
+    {
+      "testo": "Tassa sui rifiuti (TARI)...",
+      "fonte": "Comune di Codroipo - Ufficio Tributi"
+    }
+  ]
+}
+```
+
+Questo formato tiene basso il costo: pochi chunk, testo breve, fonte inclusa. Vapi riceve il contesto
+minimo necessario e genera la frase vocale.
 
 **Cosa NON facciamo ora** (scelta consapevole di dimensionamento, = "miglioramenti con più tempo"):
 reranking (cross-encoder), hybrid (dense+BM25), LangChain/LlamaIndex, vector DB esterni
