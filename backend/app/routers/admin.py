@@ -4,11 +4,12 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
 
+from backend.app.admin.auth import require_admin
 from backend.app.config import settings
 from backend.app.deps import get_repo
 from backend.app.services.appointments.repository import AppointmentRepository
 
-router = APIRouter(prefix="/admin")
+router = APIRouter(prefix="/admin", dependencies=[Depends(require_admin)])
 
 _templates = Jinja2Templates(
     directory=Path(__file__).resolve().parent.parent / "templates"

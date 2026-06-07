@@ -289,7 +289,7 @@ aggiuntivo del test ("piccolo frontend per visualizzare gli appuntamenti prenota
 | Dati | `AppointmentRepository.list_all(data_da, data_a, servizio)` | riusa il Repository Pattern già esistente; query SQL parametrizzata |
 | Filtri | intervallo di date + categoria di servizio | i due tagli utili per un operatore; la categoria usa l'elenco fisso in `config.py` |
 | Vincolo date | il campo "Al" non può precedere "Dal" | `min` lato server più un piccolo script inline che lo sincronizza in tempo reale |
-| Accesso | nessuna autenticazione | demo con dati fittizi su repository pubblica; il meccanismo HTTP Basic era stato previsto e poi rimosso per semplicità (vedi NOTA_SCELTE_LIMITI) |
+| Accesso | HTTP Basic (`ADMIN_USER`/`ADMIN_PASSWORD` da `.env`) | il pannello mostra dati personali (nome, codice prenotazione) ed è raggiungibile pubblicamente via ngrok; senza credenziali configurate resta disabilitato (fail-closed, 503) invece di aprirsi |
 
 Il pannello non introduce logica nuova: legge dallo stesso repository degli endpoint vocali e si
 limita a presentare i dati. Resta dentro il principio "il backend sa; qui mostra ciò che sa".
@@ -420,8 +420,7 @@ Se nessun chunk supera la soglia:
 {
   "esito": "non_disponibile",
   "contatto": {
-    "telefono": "0172.427010",
-    "prenotazione_url": ""
+    "telefono": "0172.427010"
   }
 }
 ```
@@ -495,12 +494,16 @@ Da importare/ricreare su Vapi (export in `vapi/assistant.json`, con chiavi/ID ri
 - **Modello:** GPT-4.1 · **Trascrizione:** Deepgram, lingua italiano · **Voce:** italiana
 - **Primo messaggio + system prompt** in italiano; il prompt impone di rispondere **solo** sui dati
   recuperati dai tool e di non inventare orari o procedure.
-- **Tre tool API Request** verso gli endpoint `/tools/*`; l'URL è quello di ngrok, da aggiornare a
-  ogni riavvio del tunnel.
+- **Tre tool API Request** verso gli endpoint `/tools/*`; l'URL è quello del tunnel ngrok di chi
+  esegue il backend — **specifico per ambiente**: chi clona la repo ed espone il backend dal
+  proprio account ngrok ottiene un URL diverso da quello nell'export consegnato, e deve
+  aggiornarlo nei 3 tool prima di testare (procedura in `vapi/README.md`).
 
 ## 13. Limiti noti e miglioramenti futuri
 
-**Limiti:** l'URL ngrok cambia a ogni riavvio (va riaggiornato nei tool); l'acquisizione dipende dalla
+**Limiti:** l'URL ngrok è legato a chi espone il backend — chi clona la repo per testarla deve
+sostituirlo nei tool con il proprio (vedi `vapi/README.md`); senza dominio statico cambia anche ad
+ogni riavvio dello stesso account. L'acquisizione dipende dalla
 struttura del sito comunale; il budget del trial vocale è limitato (test mirati).
 
 **Con più tempo:** reranking con cross-encoder su una KB più ampia; recupero ibrido per match esatti

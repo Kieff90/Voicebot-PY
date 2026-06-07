@@ -35,5 +35,4 @@ def query_servizi(payload: dict, rag=Depends(get_rag)):
         threshold=settings.rag_threshold,
         char_cap=settings.rag_char_cap,
         telefono=settings.comune_telefono,
-        prenotazione_url=settings.prenotazione_url,
     )

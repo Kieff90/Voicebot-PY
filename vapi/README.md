@@ -20,8 +20,8 @@ Cherasco, da ricreare/importare su Vapi e da consegnare come parte del test.
 
 ## Esposizione del backend (ngrok — dominio statico)
 
-L'account ngrok ha un dominio statico gratuito: l'URL **non cambia** ai riavvii, quindi i tool si
-configurano una volta sola.
+L'account ngrok usato in sviluppo ha un dominio statico gratuito: per **chi lo possiede**, l'URL non
+cambia ai riavvii, quindi i tool si configurano una volta sola.
 
 ```bash
 # 1. avvia il backend (venv con dipendenze installate)
@@ -31,7 +31,15 @@ uvicorn backend.app.main:app --reload --port 8000
 ngrok http 8000 --url=https://mummy-bronze-ferocious.ngrok-free.dev
 ```
 
-Base URL dei tool: `https://mummy-bronze-ferocious.ngrok-free.dev`
+Base URL dei tool in questo export: `https://mummy-bronze-ferocious.ngrok-free.dev`
+
+> **Importante per chi clona la repo per testarla (es. valutazione CAI):** quel dominio è legato
+> all'account ngrok dell'autore — eseguendo `ngrok http 8000` nel proprio ambiente si ottiene un
+> **URL diverso**. Prima di avviare una chiamata di test, sostituire il Server URL nei 3 tool
+> dell'assistente Vapi (sezione "Tools" nella dashboard, oppure nel JSON importato) con il proprio
+> URL ngrok seguito dal path del tool, es. `https://<tuo-url>.ngrok-free.app/tools/query_servizi`.
+> Senza questo passo i tool chiamano un backend non raggiungibile e l'assistente non avrà accesso
+> a informazioni servizi/disponibilità/prenotazione.
 
 ## Contratto tool (riferimento)
 
@@ -65,5 +73,3 @@ Assistant: `Comune di Cherasco` (id `f3ea426c-c818-4c51-bdea-93bd5f938a5b`).
 
 - Il backend gira in locale dietro ngrok: per una demo va avviato prima della chiamata.
 - Gli slot appuntamento sono fissi (09:00, 10:00, 11:00, 12:00), configurabili via `slot_hours`.
-- `prenotazione_url` nel fallback è ancora vuoto (placeholder): si imposta in `.env` quando il
-  Comune fornisce un link reale.

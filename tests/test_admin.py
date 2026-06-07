@@ -1,4 +1,23 @@
-def test_appointments_accessible_without_auth(client):
+import pytest
+
+from backend.app.config import settings
+
+
+@pytest.fixture(autouse=True)
+def _admin_auth(client, monkeypatch):
+    monkeypatch.setattr(settings, "admin_user", "admin")
+    monkeypatch.setattr(settings, "admin_password", "segreto")
+    client.auth = ("admin", "segreto")
+
+
+def test_appointments_requires_auth(client):
+    client.auth = None
+    resp = client.get("/admin/appointments")
+    assert resp.status_code == 401
+    assert resp.headers["WWW-Authenticate"] == "Basic"
+
+
+def test_appointments_accessible_with_auth(client):
     resp = client.get("/admin/appointments")
     assert resp.status_code == 200
     assert "Prenotazioni Servizi" in resp.text

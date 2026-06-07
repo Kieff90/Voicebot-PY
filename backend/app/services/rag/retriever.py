@@ -22,7 +22,6 @@ def query_servizi(
     threshold: float,
     char_cap: int,
     telefono: str = "",
-    prenotazione_url: str = "",
 ) -> dict[str, Any]:
     try:
         req = QueryRequest(**arguments)
@@ -35,7 +34,7 @@ def query_servizi(
         # formula la frase ("non ho questa informazione, contatta il Comune...").
         return {
             "esito": "non_disponibile",
-            "contatto": {"telefono": telefono, "prenotazione_url": prenotazione_url},
+            "contatto": {"telefono": telefono},
         }
 
     risultati: list[dict[str, str]] = []
