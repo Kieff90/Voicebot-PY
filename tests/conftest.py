@@ -21,6 +21,7 @@ _FAKE_CHUNKS = [
 @pytest.fixture
 def client():
     conn = sqlite3.connect(":memory:", check_same_thread=False)
+    conn.row_factory = sqlite3.Row
     init_db(conn)
     repo = AppointmentRepository(conn)
     fake_embedder = FakeEmbedder()
