@@ -40,7 +40,12 @@ flowchart LR
     B -- risultato --> V
     B --> R[("Indice servizi<br/>cosine NumPy")]
     B --> D[("SQLite<br/>appuntamenti")]
+    O[Operatore sportello] -- browser --> A[Pannello prenotazioni<br/>/admin/appointments]
+    A --> B
     </div>
+    <p class="sub">Oltre al canale vocale, un pannello web di sola lettura mostra all'operatore gli
+    appuntamenti registrati, con filtri per data e categoria di servizio. Legge dallo stesso database
+    delle prenotazioni.</p>
   </div>
 
   <h2>Dall'acquisizione all'indice (offline)</h2>

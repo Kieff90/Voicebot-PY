@@ -14,6 +14,11 @@ backend (esposto in locale tramite ngrok); il backend risponde e l'assistente pr
 La trascrizione, la sintesi vocale e la formulazione della risposta restano all'assistente; il
 recupero delle informazioni e la gestione degli appuntamenti restano al backend.
 
+Oltre agli endpoint vocali, il backend espone un pannello web di sola lettura
+(`/admin/appointments`) per consultare gli appuntamenti prenotati, con filtri per intervallo di date
+e categoria di servizio. È una pagina HTML generata lato server, senza login e senza JavaScript di
+build, pensata per uno sportello che vuole vedere a colpo d'occhio le prenotazioni registrate.
+
 Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema).
 
 ## Stack
@@ -43,6 +48,7 @@ Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema).
    ```
    uvicorn backend.app.main:app --reload
    ```
+   Il pannello prenotazioni è poi visibile su `http://127.0.0.1:8000/admin/appointments`.
 4. Aprire il tunnel verso il backend:
    ```
    ngrok http 8000
@@ -51,12 +57,12 @@ Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema).
 
 ## Struttura
 
-- `backend/` — API FastAPI: recupero informazioni e gestione appuntamenti
+- `backend/` — API FastAPI: recupero informazioni, gestione appuntamenti e pannello web prenotazioni
 - `ingestion/` — acquisizione e indicizzazione dei contenuti del sito (offline)
 - `vapi/` — configurazione dell'assistente da importare in Vapi
 - `docs/` — `BLUEPRINT.md` (design del sistema), `NOTA_SCELTE_LIMITI.md` (scelte, limiti, migliorie), `architecture.html` (diagrammi apribili nel browser).
 
 ## Stato
 
-Backend di prenotazione e RAG implementati e testati. Progettazione in
-[docs/BLUEPRINT.md](docs/BLUEPRINT.md).
+Backend di prenotazione, RAG e pannello web di consultazione appuntamenti implementati e testati.
+Progettazione in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).

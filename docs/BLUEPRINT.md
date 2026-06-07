@@ -29,6 +29,11 @@ La voce e la conversazione sono gestite da Vapi. La conoscenza dei servizi e la 
 appuntamenti vivono in un backend FastAPI separato, interrogato dall'assistente tramite tool durante
 la chiamata. Il backend è esposto in locale via ngrok.
 
+Accanto ai due casi d'uso vocali, il backend offre una terza superficie non vocale: un **pannello
+web di sola lettura** (`/admin/appointments`) per consultare gli appuntamenti prenotati, pensato per
+l'operatore dello sportello. Copre l'elemento aggiuntivo richiesto dal test ("frontend per
+visualizzare gli appuntamenti"). Dettaglio in §6.1.
+
 ## 2. Architettura del prodotto (runtime)
 
 **Principio guida: Vapi parla; il backend sa e decide.** Vapi orchestra voce + modello linguistico +
@@ -49,6 +54,9 @@ flowchart LR
   FS --> R
   SC[Scraping<br/>crawl4ai] -. offline .-> CB[Corpus building<br/>pulizia + metadata]
   CB -. offline .-> R
+  O[Operatore sportello] -- browser --> A[Pannello prenotazioni<br/>/admin/appointments<br/>HTML server-side]
+  A --> B
+  B -. legge .-> D
 ```
 
 **Componenti:**
@@ -63,6 +71,10 @@ flowchart LR
   dal corpus; resta in memoria RAM e viene interrogata con cosine similarity in NumPy. Non è SQLite,
   non è Supabase e non è un vector database esterno. FAISS resta un'evoluzione se il corpus cresce.
 - **Database appuntamenti (SQLite):** salva solo appuntamenti, codici di conferma e slot occupati.
+- **Pannello prenotazioni (`/admin/appointments`):** pagina HTML generata lato server (Jinja2) che
+  elenca gli appuntamenti del database in sola lettura, con filtri per intervallo di date e categoria
+  di servizio. Non chiama Vapi, non genera nulla: legge dal repository e rende una tabella. Vive nel
+  backend per riusare lo stesso accesso ai dati degli endpoint vocali.
 
 Il confine netto rende **tutta** la logica (RAG, regole, persistenza) testabile in isolamento e
 indipendente dal vendor vocale.
@@ -247,7 +259,9 @@ backend/app/
 ├── deps.py                 # dependency injection (repository) — override-abile nei test
 ├── routers/
 │   ├── health.py           # GET /health
-│   └── tools.py            # POST /tools/disponibilita · /crea_appuntamento · /query_servizi
+│   ├── tools.py            # POST /tools/disponibilita · /crea_appuntamento · /query_servizi
+│   └── admin.py            # GET /admin/appointments — pannello prenotazioni (sola lettura)
+├── templates/              # appointments.html — pagina Jinja2 del pannello
 ├── models/                 # Pydantic = validazione al confine, usata dentro i service
 │   ├── appointment.py      #   AvailabilityRequest, AppointmentRequest
 │   └── rag.py              #   QueryRequest per query_servizi
@@ -262,6 +276,23 @@ tests/                      # unit + contratto + mini eval RAG
 
 `ingestion/` è separata dal runtime: usa librerie pesanti (crawl4ai) e gira offline, così il servizio
 resta leggero e il confine "retriever" è evidente.
+
+### 6.1 Pannello prenotazioni (`/admin/appointments`)
+
+Frontend minimale di sola lettura per consultare gli appuntamenti registrati. Risponde all'elemento
+aggiuntivo del test ("piccolo frontend per visualizzare gli appuntamenti prenotati").
+
+| Aspetto | Scelta | Perché |
+|---|---|---|
+| Rendering | HTML server-side con Jinja2 | nessun build step, nessun framework JS, una sola pagina |
+| Rotta | `GET /admin/appointments` in `routers/admin.py` | thin: legge i parametri, valida, chiama il repository, rende il template |
+| Dati | `AppointmentRepository.list_all(data_da, data_a, servizio)` | riusa il Repository Pattern già esistente; query SQL parametrizzata |
+| Filtri | intervallo di date + categoria di servizio | i due tagli utili per un operatore; la categoria usa l'elenco fisso in `config.py` |
+| Vincolo date | il campo "Al" non può precedere "Dal" | `min` lato server più un piccolo script inline che lo sincronizza in tempo reale |
+| Accesso | nessuna autenticazione | demo con dati fittizi su repository pubblica; il meccanismo HTTP Basic era stato previsto e poi rimosso per semplicità (vedi NOTA_SCELTE_LIMITI) |
+
+Il pannello non introduce logica nuova: legge dallo stesso repository degli endpoint vocali e si
+limita a presentare i dati. Resta dentro il principio "il backend sa; qui mostra ciò che sa".
 
 ## 7. Modello dati
 
@@ -436,6 +467,7 @@ Controlli distribuiti lungo tutta la pipeline, dall'ingestione alla consegna:
 | **Database SQLite** | vincolo `UNIQUE` sugli slot occupati e test sugli edge case |
 | **Corpus/RAG** | caricamento corpus, numero chunk atteso, query di smoke, soglia `0.85` su eval set |
 | **Fallback** | test che sotto soglia ritorni `non_disponibile` + contatto Comune |
+| **Pannello prenotazioni** | test su elenco, stato vuoto, filtri per data e categoria, intervallo invertito, data malformata |
 | **Integrazione demo** | smoke test con backend locale esposto via ngrok e tool Vapi configurati |
 
 - **Corpus building:** scarto pagine vuote/brevi, solo italiano, dedup, rimozione boilerplate; ogni
@@ -473,7 +505,8 @@ struttura del sito comunale; il budget del trial vocale è limitato (test mirati
 
 **Con più tempo:** reranking con cross-encoder su una KB più ampia; recupero ibrido per match esatti
 (codici, nomi uffici); deploy stabile del backend (no ngrok in demo); set di valutazione del recupero
-più ampio; estrazione dati strutturati post-call; frontend (appuntamenti + log) e containerizzazione.
+più ampio; estrazione dati strutturati post-call; estensione del pannello ai log delle conversazioni
+(il pannello appuntamenti è già realizzato, vedi §6.1) e containerizzazione.
 
 ## 14. Strumenti di AI usati
 
