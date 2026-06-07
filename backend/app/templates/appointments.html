@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <title>Prenotazioni Servizi — Comune di Cherasco</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; color: #222; }
+        h1 { font-size: 1.4rem; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+        th { background: #f0f0f0; }
+        form { margin-top: 1rem; }
+        label { margin-right: 0.4rem; font-weight: bold; }
+        input, select { margin-right: 1.2rem; }
+    </style>
+</head>
+<body>
+    <h1>Prenotazioni Servizi — Comune di Cherasco</h1>
+
+    <form method="get" action="/admin/appointments">
+        <label for="data_da">Dal</label>
+        <input type="date" id="data_da" name="data_da" value="{{ data_da }}">
+
+        <label for="data_a">Al</label>
+        <input type="date" id="data_a" name="data_a" value="{{ data_a }}">
+
+        <label for="servizio">Servizio</label>
+        <select id="servizio" name="servizio">
+            <option value="" {% if servizio == "" %}selected{% endif %}>Tutti</option>
+            {% for categoria in categorie %}
+            <option value="{{ categoria }}" {% if servizio == categoria %}selected{% endif %}>{{ categoria }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Filtra</button>
+        <a href="/admin/appointments">Azzera</a>
+    </form>
+
+    {% if appuntamenti %}
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Ora</th>
+                <th>Servizio</th>
+                <th>Nome</th>
+                <th>Codice</th>
+                <th>Stato</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appuntamento in appuntamenti %}
+            <tr>
+                <td>{{ appuntamento.data }}</td>
+                <td>{{ appuntamento.ora }}</td>
+                <td>{{ appuntamento.servizio }}</td>
+                <td>{{ appuntamento.nome }}</td>
+                <td>{{ appuntamento.codice }}</td>
+                <td>{{ appuntamento.stato }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Nessun appuntamento prenotato.</p>
+    {% endif %}
+</body>
+</html>
