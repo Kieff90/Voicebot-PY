@@ -50,11 +50,21 @@ Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema).
    uvicorn backend.app.main:app --reload
    ```
    Il pannello prenotazioni è poi visibile su `http://127.0.0.1:8000/admin/appointments`.
+
+   > Al **primo avvio reale** il backend scarica il modello di embedding
+   > (`intfloat/multilingual-e5-base`, ~1 GB) da Hugging Face e lo mette in cache locale
+   > (`~/.cache/huggingface/`). Serve quindi rete verso Hugging Face la prima volta; dagli avvii
+   > successivi parte dalla cache. I test non lo richiedono (usano un embedder fake).
 4. Aprire il tunnel verso il backend:
    ```
    ngrok http 8000
    ```
 5. Configurare i tool dell'assistente Vapi con l'URL ngrok (vedi [vapi/README.md](vapi/README.md)).
+
+   > `vapi/assistant.json` **non preserva i collegamenti ai tool**: gli ID dei tool sono specifici
+   > dell'account Vapi dell'autore. Dopo l'import vanno ricreati i 3 tool API Request (`tools/*.json`)
+   > e ricollegati all'assistant, puntandoli al proprio URL ngrok. Procedura al passo 6 di
+   > [vapi/README.md](vapi/README.md).
 
 ## Struttura
 
