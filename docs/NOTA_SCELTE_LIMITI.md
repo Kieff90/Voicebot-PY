@@ -37,7 +37,9 @@ Nota breve richiesta dai criteri di consegna del test. Per il dettaglio architet
   servizi non sono schede sul sito, non per un errore di recupero.
 - Mismatch lessicale noto: "aprire un'attività commerciale" arriva a 0.822, sotto soglia, perché il
   sito usa "attività produttive".
-- Il budget del trial vocale è limitato: i test dal vivo sono stati mirati, non esaustivi.
+- Il budget del trial vocale è limitato: i test dal vivo sono stati mirati, non esaustivi. Le
+  chiamate di prova (trascrizioni, registrazioni, export Vapi e corrispondenza con le righe del
+  database) sono raccolte in [../vapi/demo/DEMO_CALLS.md](../vapi/demo/DEMO_CALLS.md).
 
 ## Cosa si migliorerebbe con più tempo
 

@@ -1,0 +1,276 @@
+Call ID,Assistant ID,Squad ID,Customer ID,Customer Name,Customer Number,Customer SIP URI,Customer Extension,Phone Number ID,Ended Reason,Type,Duration,Started At,Ended At,Transcript,Summary,Success Evaluation,Recording URL,Cost,Phone Call Provider,Phone Call Provider ID,Created At,Updated At
+019ea25b-75cb-7001-974a-6b657d94c314,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,assistant-said-end-call-phrase,webCall,76,2026-06-07 13:52:43 GMT+0,2026-06-07 13:54:00 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Dare un appuntamento per un cambio residenza il giorno 15 giugno alle ore 9.
+AI: Il giorno 15 giugno alle 9 è disponibile per il cambio di residenza.
+AI: Mi può dire il suo nome e cognome per la prenotazione?
+User: Mario Verde,
+AI: Ho capito Mario Verde, è corretto?
+User: Sì è corretto.
+AI: Procedo a riepilogare. Appuntamento per cambio di residenza presso Anagrafe e Stato Civile. Il giorno 15 giugno alle 9. Nome Mario Verde. Conferma che va bene così?
+User: Sì confermo.
+AI: L'appuntamento è confermato per il 15 giugno
+AI: alle 9 presso Anagrafe e Stato Civile. Il codice di conferma
+AI: è uno uno 9 C 2 6 D 8. Grazie arrivederci.
+",Mario Verde successfully booked an appointment with the Cherasco municipality for a change of residence. The appointment is scheduled for June 15th at 9 AM at the Anagrafe e Stato Civile office. The AI confirmed the details and provided a confirmation code for the booking.,true,https://storage.vapi.ai/019ea25b-75cb-7001-974a-6b657d94c314-1780840443046-3642a73d-a6b8-4d64-8819-bfccb17be181-mono.wav,0.119,,,2026-06-07 13:52:43 GMT+0,2026-06-07 13:54:05 GMT+0
+019ea256-f8dc-7770-a42b-3ea6da49f106,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,101,2026-06-07 13:47:49 GMT+0,2026-06-07 13:49:31 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Prenotare un appuntamento.
+AI: Certamente. Per quale servizio le serve la appuntamento? Ad esempio anagrafe e stato civile, autorizzazioni, imprese e commercio, tributi oppure altro?
+User: Tributi.
+AI: Va bene, per quale giorno desidera fissare l'appuntamento per tributi, finanze e contravvenzioni?
+User: Il 15 giugno alle ore 10.
+AI: Controllo subito la disponibilità per il 15 giugno alle 10. Un attimo di pazienza.
+AI: Per favore.
+User: Pronto?
+AI: Sì, sono qui. Sto verificando la disponibilità per il 15 giugno alle 10 per tributi, finanze e contravvenzioni.
+AI: Un attimo di pazienza, riprovo subito. Sto avendo un problema ad accedere al sistema, riprovo un attimo.
+AI: Mi dispiace, sto riscontrando un problema tecnico nel verificare disponibilità degli appuntamenti. Può contattare il comune di Cherasco al numero 0 1 7 2 4 2 7 0 1 0 per fissare la
+","The user attempted to book an appointment for ""Tributi"" (taxes) on June 15th at 10 AM with the Cherasco municipality's virtual assistant. However, the AI encountered a technical issue accessing the system and was unable to check availability or complete the booking. The assistant advised the user to call the municipality directly to schedule the appointment.",false,https://storage.vapi.ai/019ea256-f8dc-7770-a42b-3ea6da49f106-1780840174158-864f7892-e277-4bcf-99bf-9730fd16309e-mono.wav,0.1621,,,2026-06-07 13:47:49 GMT+0,2026-06-07 13:49:36 GMT+0
+019ea1a7-ae8f-7000-88cc-65008662412b,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,126,2026-06-07 10:36:21 GMT+0,2026-06-07 10:38:28 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento. Come posso aiutarla?
+User: Prenotare un appuntamento.
+AI: Certamente. Per quale sportello desidera prenotare l'appuntamento? Ad esempio, anagrafe e stato civile, autorizzazioni, imprese e commercio, tributi, finanze e contravvenzioni oppure altro.
+User: Imprese e commercio domani alle ore 9.
+AI: Per quale giorno vorrebbe fissare l'appuntamento?
+User: Domani alle ore 9.
+AI: L'appuntamento per impresa e commercio domani alle 9 è disponibile. Mi dice cortesemente il suo nome e cognome?
+User: Alberto Bianchi
+AI: Ho capito Alberto Bianchi, è corretto.
+User: Sì corretto.
+AI: Perfetto, riepilogo. Appuntamento per impresa e commercio domani 8 giugno. 2026 alle 9 a nome Alberto Bianchi. Conferma che va bene così?
+User: Confermo.
+AI: Appuntamento confermato per impresa e commercio.
+AI: Domani 8 giugno 2026 alle 9 a nome Alberto Bianchi. Il codice di conferma è B come Bologna 0 6 e comeEmpoli 6 8 5 9.
+User: Voglio prenotare un altro appuntamento invece per Anagrafe domani alle ore 9.
+AI: Mi dispiace, domani alle 9 non è disponibile per anagrafe e stato
+AI: civile. È libero invece alle 10, vuole prenotare per quell'ora?
+","The user successfully booked an appointment for ""Imprese e commercio"" for Alberto Bianchi on June 8, 2026, at 9 AM. They then attempted to book a second appointment for ""Anagrafe"" at 9 AM for the same day, but were informed it was unavailable, with the AI offering 10 AM instead before the call ended.",true,https://storage.vapi.ai/019ea1a7-ae8f-7000-88cc-65008662412b-1780828711262-f71249f0-6020-4f68-8090-af49f18f841d-mono.wav,0.2079,,,2026-06-07 10:36:21 GMT+0,2026-06-07 10:38:33 GMT+0
+019ea1a5-f19f-7770-9e9b-5a125e732b45,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,107,2026-06-07 10:34:27 GMT+0,2026-06-07 10:36:15 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Crasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Devo prenotare un appuntamento.
+AI: Certamente, per quale servizio le serve l'appuntamento? Ad esempio anagrafe, tributi oppure altro.
+User: Ci sono solo questi?
+AI: Si può prenotare per anagrafe e stato civile, autorizzazioni, imprese e commercio tributi, finanze e contravvenzioni, oppure altro.
+User: Io praticamente 1º vivevo a Milano, adesso mi sono trasferito a Cherasua quindi dovevo fare il cambio indirizzo.
+AI: Per il cambio di indirizzo deve prenotare presso l'anagrafe e stato civile. Per quale giorno preferisce l'appuntamento?
+User: Domani alle nove:zero.
+AI: Mi dispiace, domani alle 9 non è disponibile.
+AI: Sono liberi gli orari 10 oppure 12. Quale preferisce?
+User: Facciamo domani alle 12 allora.
+AI: Perfetto, mi serve il suo nome e cognome per la prenotazione. Può dirmelo?
+User: Roberto Rossi
+AI: Ho capito Roberto Rossi, è corretto.
+User: Sì, corretto.
+AI: L'appuntamento è confermato per anagrafe e stato civile,
+AI: domani 8 giugno 2026 alle 12 a nome Roberto Rossi. Il codice di conferma è 7 0 4 0 7 3 9 7.
+","The user called to book an appointment for a change of address, which the AI assistant identified as falling under ""anagrafe e stato civile."" After an initial time was unavailable, the user successfully scheduled the appointment for tomorrow, June 8th, 2026, at 12:00 PM under the name Roberto Rossi, receiving a confirmation code.",true,https://storage.vapi.ai/019ea1a5-f19f-7770-9e9b-5a125e732b45-1780828578115-0a1eb2bc-173e-4cc7-a52d-3d1fa4be13b5-mono.wav,0.1645,,,2026-06-07 10:34:27 GMT+0,2026-06-07 10:36:20 GMT+0
+019ea1a4-1165-7000-8d72-3a6c9e9a121c,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,78,2026-06-07 10:32:24 GMT+0,2026-06-07 10:33:43 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento. Come posso aiutarla?
+User: Voglio creare un appuntamento perché devo fare un cambio residenza e domani alle 11.3.
+AI: Mi dispiace, le 11.3 di domani non sono disponibili.
+AI: Sono liberi gli orari 9, 10.12. Quale preferisce?
+User: Facciamo le nuove.
+AI: Perfetto, prenoto per domani alle 9. Mi può dire il suo nome e cognome per fissare l'appuntamento?
+User: Marta Bianchi.
+AI: Ho capito Marta Bianchi, è corretto?
+User: Sì, corretto.
+AI: L'appuntamento è confermato per domani.
+AI: 8 giugno alle 9 presso l'anagrafe e stato civile. A nome Marta Bianchi. Il codice di conferma è AB9 8º A48B.
+User: Ciao,
+AI: Buongiorno, come posso aiutare
+","The user called to book an appointment for a change of residence. After their initial time request was unavailable, they successfully scheduled an appointment for June 8th at 9:00 AM. The appointment was confirmed for Marta Bianchi at the registry office, and a confirmation code was provided.",true,https://storage.vapi.ai/019ea1a4-1165-7000-8d72-3a6c9e9a121c-1780828426356-558c19bb-c6e0-4dde-ae23-c18bd734203e-mono.wav,0.1283,,,2026-06-07 10:32:24 GMT+0,2026-06-07 10:33:48 GMT+0
+019ea196-d385-7001-804e-3a15344fb83f,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,51,2026-06-07 10:17:57 GMT+0,2026-06-07 10:18:49 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento. Come posso aiutarla?
+User: Voglio prenotare un appuntamento.
+AI: Certamente. Per quale sportello desidera prenotare l'appuntamento? Può scegliere tra anagrafe e stato civile? Autorizzazioni, imprese e commercio, tributi, finanze e contravvenzioni, oppure altro.
+User: Autorizzazioni.
+AI: Va bene, per quale giorno vorrebbe prenotare l'appuntamento?
+User: Domani alle undici:zero.
+AI: Mi dispiace, l'orario 11 di domani non è disponibile.
+AI: Sono liberi 9, 10.12. Quale preferisce?
+","The user called the Cherasco municipality's virtual assistant to book an appointment for the ""Autorizzazioni"" department. They requested a slot for tomorrow at 11:00, but this time was unavailable. The AI offered alternative times at 9:00, 10:00, or 12:00.",false,https://storage.vapi.ai/019ea196-d385-7001-804e-3a15344fb83f-1780827531765-370b378b-a194-4baf-b077-59388b2c0ff4-mono.wav,0.0775,,,2026-06-07 10:17:56 GMT+0,2026-06-07 10:18:53 GMT+0
+019ea193-ea36-7000-a175-3415ba757bcc,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,183,2026-06-07 10:14:46 GMT+0,2026-06-07 10:17:50 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Crasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Voglio informazioni sui servizi di Tari.
+AI: Mi dispiace, non ho informazioni sui servizi tali.
+AI: Può contattare il comune al numero 0 1 7 2. 4 2 7 0 1 0. Vuole sapere altro sui servizi o prenotare un appuntamento?
+User: Voglio prenotare un appuntamento.
+AI: Certamente, per quale servizio le serve l'appuntamento? Ad esempio, anagrafe e stato civile, autorizzazioni, imprese, e commercio, tributi finanze e contravvenzioni, oppure altro.
+User: Altro.
+AI: Va bene, per quale giorno desidera l'appuntamento?
+User: Domani alle 12.
+AI: L'orario delle 12 di domani è disponibile.
+AI: Può dirmi il suo nome e cognome per la prenotazione?
+User: Mario Nero
+AI: Ho capito Mario Nero, è corretto?
+User: Sì,
+AI: Riepilogo, appuntamento allo sportello Altro domani 8 giugno 2026 alle 12. A nome Mario Nero. Posso procedere?
+User: Sì, procede.
+AI: L'appuntamento è confermato per domani
+AI: 8 giugno 2026 alle 12, sportello altro a nome Mario Nero. Il codice di conferma è 5 8.18 e uno b. Vuole sapere altro?
+User: Voglio anche prenotare un appuntamento per permessi domani alle 11.
+AI: Certamente, per Messi corrisponde allo sportello autorizzazioni. Procedo a verificare la disponibilità per domani alle 11
+User: Sì,
+AI: L'orario delle 11 di domani è disponibile. Può dirmi il suo nome e cognome per la prenotazione?
+User: Mario Nero.
+AI: Ho capito Mario Nero, è corretto?
+User: Sì.
+AI: Riepilogo appuntamento allo sportello autorizzazione domani 8 giugno 2026 alle 11 a nome Marionero. Procedo.
+User: Sì, procedi.
+AI: L'appuntamento è confermato per domani 8 giugno giugno 2026 alle 11, sportello autorizzazioni a nome Mario Nero. Il codice di conferma è tra I c c 7º d 7 4. Vuole sapere altro?
+User: No grazie ciao.
+AI: Grazie a lei e arrivederci e buona giornata.
+","The user initially sought information on Tari services, which the AI could not provide, directing them to a phone number instead. Subsequently, the user successfully booked two appointments for Mario Nero for June 8, 2026: one for ""Altro"" services at 12:00 PM and another for ""Permessi"" (Authorizations) at 11:00 AM.",true,https://storage.vapi.ai/019ea193-ea36-7000-a175-3415ba757bcc-1780827472798-a5cb329b-8150-4911-bf24-bd0cd5971879-mono.wav,0.2917,,,2026-06-07 10:14:46 GMT+0,2026-06-07 10:17:55 GMT+0
+019ea184-aa3d-7000-a98d-cef93e90a278,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,75,2026-06-07 09:58:06 GMT+0,2026-06-07 09:59:22 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Crasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Voglio prenotare un appuntamento per domani alle 11 per un cambio di residenza. Alessandro
+User: Verdi
+AI: Ho capito Alessandro Verdi, è corretto?
+User: Sì,
+AI: Grazie, confermo. Appuntamento per cambio di residenza. Domani 8 giugno 2026 alle 11. Purtroppo alle 11 non è disponibile, sono liberi le 9, le 10 e le 12. Quale preferisce?
+User: Le 9.
+AI: Perfetto, riepilogo. Appuntamento per cambio di residenza, domani 8 giugno 2026 alle 9 a nome di Alessandro Verdi. Conferma che va bene così.
+User: Sì, confermo.
+AI: Appuntamento confermato per il cambio di residenza domani
+AI: 8 giugno 2026 alle 9. Il codice di conferma è uno 7º 8345. Serve altro,
+","The user, Alessandro Verdi, called to book an appointment for a change of residence. After the initial requested time of 11 AM was unavailable, the user successfully scheduled and confirmed the appointment for tomorrow, June 8, 2026, at 9 AM. A confirmation code was provided for the booking.",true,https://storage.vapi.ai/019ea184-aa3d-7000-a98d-cef93e90a278-1780826364632-8540c5c9-15fb-421e-97e4-0fa85d49d1e2-mono.wav,0.1183,,,2026-06-07 09:58:06 GMT+0,2026-06-07 09:59:26 GMT+0
+019ea183-94c8-7001-8e53-f3511973bd5a,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,61,2026-06-07 09:56:55 GMT+0,2026-06-07 09:57:57 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Chiarasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Voglio fare un un appuntamento per domani alle ore 11 per un cambio di residenza, nome Mario Bianchi.
+AI: Per domani 8 giugno 2026 alle 11 il cambio di residenza è disponibile.
+AI: Conferma che vuole fissare l'appuntamento per domani alle 11 per cambio di residenza a nome Mario Bianchi.
+User: Sì confermo.
+AI: L'appuntamento è confermato per domani 8 giugno 2026 alle 11 per cambio di residenza a nome Mario Bianchi.
+AI: Il codice di conferma è 9 1 2 f 0 b b 4.
+","The user successfully booked an appointment for a change of residence for Mario Bianchi. The appointment is confirmed for tomorrow, June 8, 2026, at 11 AM. A confirmation code (912f0bb4) was provided for the booking.",true,https://storage.vapi.ai/019ea183-94c8-7001-8e53-f3511973bd5a-1780826279755-4604820f-4b22-4de0-b1af-650265673dac-mono.wav,0.0902,,,2026-06-07 09:56:55 GMT+0,2026-06-07 09:58:01 GMT+0
+019ea17f-ac2c-7000-ba4b-3baa1c8c9971,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,124,2026-06-07 09:52:39 GMT+0,2026-06-07 09:54:44 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Voglio prenotare un appuntamento per domani per fare un cambio residenza.
+AI: Va bene, domani è 8 giugno 2026. Conferma che il servizio desiderato è il cambio di residenza?
+User: Sì confermo che cambiano di vento.
+AI: Per domani sono disponibili gli orari 9, 10.12.
+AI: Quale preferisce?
+User: Alle 11.
+AI: Le 11 di domani non sono disponibili. Può scegliere tra le 9, le 10 o le 12?
+User: Voglio alle 13.
+AI: Mi dispiace, alle 13 non è disponibile. Può scegliere tra le 9, le 10 o le 12.
+User: Grazie.
+AI: Prego, resto a disposizione se vuole
+User: Domani No aspetta facciamo dopodomani alle 10 o alle 11.
+AI: Per dopodomani, 9 giugno 2026, sono disponibili le 9, le 11 e le 12. Vuole prenotare alle 11?
+User: Perché non vale 10?
+AI: Alle 10 non ci sono disponibilità per il cambio di residenza dopodomani. Vuole confermare per le uncici a Terrafo Icidi?
+User: Ma perché parla inglese?
+AI: Mi scusi, forse c'è stato un errore nella pronuncia. Confermo che posso prenotare alle 11 per il cambio di residenza dopodomani. Vuole procedere con questo orario?
+User: Ok ciao.
+","The user attempted to book an appointment for a change of residence, initially for tomorrow (June 8th) but couldn't find a suitable time. They then shifted to the day after tomorrow (June 9th), where the AI offered 9 AM, 11 AM, or 12 PM, confirming 10 AM was unavailable. The call ended after a minor pronunciation error from the AI, with the user not explicitly confirming the 11 AM slot.",false,https://storage.vapi.ai/019ea17f-ac2c-7000-ba4b-3baa1c8c9971-1780826086589-5c17325b-2711-4997-b613-ee599d39183b-mono.wav,0.1938,,,2026-06-07 09:52:39 GMT+0,2026-06-07 09:54:48 GMT+0
+019ea17b-3ebf-7000-bdc5-94a46c69addf,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,130,2026-06-07 09:47:49 GMT+0,2026-06-07 09:50:00 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Voglio prenotare un appuntamento per dopodomani per un cambio di residenza alle ore 10.
+AI: L'orario delle 10 di dopodomani è disponibile.
+AI: Mi può dire il suo nome e cognome per la prenotazione?
+User: Mario Rossi.
+AI: Ho capito Mario Rossi, è corretto?
+User: Sì.
+AI: L'appuntamento per il cambio di residenza è confermato
+AI: per dopodomani?
+AI: 9 giugno 2026 alle 10. Il codice di conferma è ac46 9f, serve altro?
+User: Sì voglio prenotare un altro appuntamento
+AI: Certamente. Per quale servizio desideri prenotare il nuovo appuntamento?
+User: Per un cambio di residenza dopodomani alle 10 a nome di Anna Rossi.
+AI: L'orario delle 10 di dopodomani per il cambio di residenza è già stato prenotato. Gli orari ancora disponibili sono 9 11.12. Quale preferisce?
+User: Quello delle 12.3.
+AI: Mi conferma che vuole prenotare cambio di residenza per dopodomani. 9 giugno 2026 alle 12.3 a nome di Anna Rossi.
+User: Che gli orari sono disponibili sono 9 11.12.
+AI: Confermo, orari disponibili per dopodomani sono 9, 11.12. Vuole fissare l'appuntamento alle 12?
+User: No alle 12.3.
+AI: Mi dispiace alle 12.3 non ci sono disponibilità. Gli orari liberi sono solo alle 9, alle 11 oppure alle 12. Vuole scegliere uno di questi?
+","The user successfully booked an appointment for a change of residence for Mario Rossi on June 9, 2026, at 10 AM. Subsequently, they attempted to book a second appointment for Anna Rossi for the same service and day, initially requesting the already taken 10 AM slot. After being offered 9 AM, 11 AM, or 12 PM, the user requested 12:30 PM, which was unavailable, leading to the call ending without the second appointment being confirmed.",false,https://storage.vapi.ai/019ea17b-3ebf-7000-bdc5-94a46c69addf-1780825803033-0876acb3-e4e3-44e0-88e9-be703cf93f96-mono.wav,0.2159,,,2026-06-07 09:47:49 GMT+0,2026-06-07 09:50:05 GMT+0
+019ea179-8ea4-7000-a8d4-fa3a8b5a8df4,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,silence-timed-out,webCall,95,2026-06-07 09:45:59 GMT+0,2026-06-07 09:47:34 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi servizi comunali oppure aiutarla a prenotare un appuntamento. Come posso aiutarla?
+User: Voglio prenotare un appuntamento dopodomani alle 10 per un cambio residenza.
+AI: L'appuntamento per il cambio residenza dopodomani alle 10 è disponibile.
+AI: Può dirmi il suo nome e cognome?
+User: Giacomo Neri
+AI: Ho capito Giacomo Neri, è corretto?
+User: Sì corretto.
+AI: Perfetto, riepilogo, appuntamento per cambio residenza, dopodomani 9 giugno 2026 alle 10 a nome di Giacomo Neri. Conferma che va bene così?
+User: Sì confermo.
+AI: Appuntamento confermato per il cambio residenza.
+AI: Il 9 giugno 2026 alle 10. Il codice di conferma è 4 C 3C8786.
+","The user, Giacomo Neri, successfully booked an appointment for a change of residence with the Cherasco municipality. The appointment is scheduled for June 9, 2026, at 10:00 AM, and was confirmed with code 4C3C8786.",true,https://storage.vapi.ai/019ea179-8ea4-7000-a8d4-fa3a8b5a8df4-1780825656836-cbd4c391-3477-4425-83ef-7e418207d00f-mono.wav,0.14,,,2026-06-07 09:45:58 GMT+0,2026-06-07 09:47:39 GMT+0
+019ea175-0a91-7001-810b-4491d4bf0367,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,63,2026-06-07 09:41:03 GMT+0,2026-06-07 09:42:06 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Chiarasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Ciao, voglio prenotare un appuntamento per dopodomani alle 11 per un cambio di residenza.
+AI: L'appuntamento per il cambio di residenza dopodomani
+AI: alle 11 è disponibile. Mi può dire il suo nome, scandendo le lettere una per una così lo registro?
+","The AI assistant offered municipal services, and the user requested an appointment for a change of residence for the day after tomorrow at 11 AM. The AI confirmed the availability of the appointment and asked for the user's name to proceed with the booking. The call ended with the customer.",false,https://storage.vapi.ai/019ea175-0a91-7001-810b-4491d4bf0367-1780825329387-6164f380-dad5-43e6-b7c7-141e0e606393-mono.wav,0.0801,,,2026-06-07 09:41:02 GMT+0,2026-06-07 09:42:11 GMT+0
+019ea165-fdec-7771-92c4-7fc0e316a4fd,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,188,2026-06-07 09:24:36 GMT+0,2026-06-07 09:27:44 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento? Come posso aiutarla?
+User: Prenotare domani un appuntamento per bambino di residenza.
+AI: Certamente, domani è 8 giugno 2026. Per quale servizio o sportello desidera prenotare l'appuntamento per il bambino di residenza?
+User: È un cambio residenza.
+AI: Sono disponibili gli orari 9, 10, 11.12.
+AI: Quale preferisce per il cambio di residenza?
+User: Mettiamo alle 11.
+AI: Perfetto, posso avere il nome e cognome del richiedente per fissare l'appuntamento alle 11?
+User: Anna Rossi.
+AI: L'appuntamento per cambio residenza
+AI: è fissato per lunedì 8 giugno 2026 alle 11. A nome Anna Rossi.
+AI: Il codice di conferma è CC 0 0 2 5 1 uno. Serve altro?
+User: No,
+AI: Va bene, grazie e buona giornata. Se serve altro per I servizi del comune di Cherasco sono qui.
+User: Ciao
+AI: Buongiorno Giacomo, come posso aiutarti oggi? Con I servizi del comune di Cherasco? Vuoi informazioni o desideri prenotare un appuntamento?
+User: Voglio prenotare un appuntamento per un orario di residenza domani alle 11.
+AI: Certo, Mi scusi. Domani è lunedì 8 giugno 2026. Conferma che vuoi prenotare per il servizio cambio residenza alle 11. Mi dici il tuo nome e cognome per la prenotazione?
+User: Giacomo neri
+AI: Ti confermo, appuntamento per cambio residenza lunedì 8 giugno 2026 alle 11 a nome Giacomo Neri. Confermi che è tutto corretto qua ma lo spelling del nome è g. I a c o m o n e r I.
+User: Pronto?
+AI: Sì, sono qui. Confermi che vuoi fissare l'appuntamento per cambio residenza domani alle 11 a nome Giacomo Neri?
+User: Sì, confermo.
+AI: Mi dispiace l'orario delle 11 non è più disponibile per il cambio residenza domani. Vuoi scegliere un altro orario tra
+AI: quelli disponibili oppure preferisci un'altra data?
+User: Ciao grazie, ciao.
+AI: Grazie a te, a
+","The first caller, Anna Rossi, successfully booked an appointment for a change of residence on June 8, 2026, at 11 AM. A second caller, Giacomo Neri, then attempted to book the same service for the same date and time, but was informed that the 11 AM slot was no longer available, leading him to end the call without making a reservation.",true,https://storage.vapi.ai/019ea165-fdec-7771-92c4-7fc0e316a4fd-1780824467501-807032aa-9664-4874-9a47-9cb0b8bded6d-mono.wav,0.3125,,,2026-06-07 09:24:36 GMT+0,2026-06-07 09:27:49 GMT+0
+019ea165-3ab1-711f-9b00-3f00c56806e0,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,call.in-progress.error-assistant-did-not-receive-customer-audio,webCall,0,2026-06-07 09:24:01 GMT+0,2026-06-07 09:24:01 GMT+0,,,,https://storage.vapi.ai/019ea165-3ab1-711f-9b00-3f00c56806e0-1780824244223-f6a42cae-2223-47c4-998c-f0c122eeef31-mono.wav,0.0028,,,2026-06-07 09:23:46 GMT+0,2026-06-07 09:24:04 GMT+0
+019ea154-9feb-7001-89ea-d11829898d84,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,137,2026-06-07 09:05:40 GMT+0,2026-06-07 09:07:58 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento. Come posso aiutarla?
+User: Voglio fare il cambio me, medico perché arrivo da un altro comune e mi sono trasferito a Cherasco.
+AI: Mi dispiace, non ho questa informazione. Può contattare il comune di Cherasco a
+AI: numero 0 1 7 2 4 2 7 0 1 0 per avere dettagli sul cambio medico. Posso posso aiutarla con altro?
+User: Allora voglio prendere un appuntamento per venire in comune.
+AI: Certamente, Per quale servizio o sportello desidera prenotare l'appuntamento?
+User: Per il cambio medico.
+AI: Va bene, per quale giorno vorrebbe fissare l'appuntamento?
+User: Per domani alle 10.
+AI: L'orario delle 10 è disponibile per il cambio medico domani.
+AI: Mi può dire il suo nome e cognome per la prenotazione?
+User: Angelo Blu.
+AI: Ho capito, Angelo Blu confermo, scritto ANGELO BILLEU, è corretto?
+User: Sì è corretto.
+AI: Riepilogo appuntamento per cambio medico giorno 6 giugno 2024 alle ore 10 a nome Angelo Blu. Conferma che va bene così.
+User: Confermo.
+AI: Non posso fissare l'appuntamento perché la data risulta nel passato.
+AI: Puoi indicarmi un altro giorno.
+User: Domani è l'otto giugno 2026.
+AI: L'orario delle 10 è disponibile anche per lunedì 8 giugno 2026. Confermo questo appuntamento.
+User: Sì, conferma, prenota.
+AI: Appuntamento confermato per cambio medico
+AI: medico, lunedì 8 giugno.
+AI: Two,
+AI: Il codice di conferma è 1 4º 6 4º 3 6 1 Serve altro?
+","The user, Angelo Blu, initially sought information on changing doctors after moving to Cherasco but was directed to a phone number. Subsequently, they requested to book an appointment at the municipality for the doctor change. After a slight date correction, the AI successfully scheduled an appointment for Angelo Blu on Monday, June 8th, 2026, at 10 AM, providing a confirmation code.",true,https://storage.vapi.ai/019ea154-9feb-7001-89ea-d11829898d84-1780823281430-b228f7fc-e3ae-4d6a-abe6-62db1e00b333-mono.wav,0.2253,,,2026-06-07 09:05:38 GMT+0,2026-06-07 09:08:03 GMT+0
+019ea146-00ea-7000-b8d6-98e92d349e73,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,92,2026-06-07 08:49:40 GMT+0,2026-06-07 08:51:13 GMT+0,"AI: Buongiorno, sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento. Come posso aiutarla?
+User: Quanto costa fare il passaporto?
+AI: Mi dispiace, non ho questa informazione.
+AI: Può contattare il comune di Crasco al numero 0 1 7 2 4 2 7 0 1 0. Vuole sapere altro su altri servizi o prenotare un appuntamento?
+User: Prenotare un appuntamento.
+AI: Volentieri, per quale servizio o sportello vorrebbe prenotare l'appuntamento?
+User: Quello per fare I passaporti.
+AI: Perché giorno vorrebbe prenotare l'appuntamento per il servizio passaporti?
+User: Per lunedì 9 giugno alle 10.
+AI: Mi dispiace, sto avendo un problema ad accedere al sistema.
+AI: Riprovo un attimo, potrebbe dirmi anche il suo nome così preparo tutto.
+User: Pedro Pizzarro.
+AI: Sto avendo ancora un problema ad accedere
+AI: sistema per la prenotazione. Può contattare il comune di Cherasco al numero 0 1 7 2. 4 2 7 0 1 0 per fissare l'appuntamento. Vuole sapere altro su altri servizi?
+User: Ciao.
+AI: Buongiorno, posso aiutarla con informazioni sui servizi del comune di Cherasco
+","The user initially inquired about the cost of a passport, which the AI could not provide, directing them to call the municipality. The user then attempted to book a passport appointment for June 9th at 10 AM under the name Pedro Pizzarro. However, the AI encountered system access issues and was unable to complete the booking, again advising the user to contact the municipality directly.",false,https://storage.vapi.ai/019ea146-00ea-7000-b8d6-98e92d349e73-1780822275918-9860963f-6d73-4cda-8d86-4adfbc6fbb71-mono.wav,0.161,,,2026-06-07 08:49:40 GMT+0,2026-06-07 08:51:18 GMT+0
+019ea142-657d-7000-a2ac-8e867447f198,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,customer-ended-call,webCall,50,2026-06-07 08:45:44 GMT+0,2026-06-07 08:46:34 GMT+0,"AI: Buongiorno sono l'assistente virtuale del comune di Cherasco. Posso darle informazioni sui servizi comunali oppure aiutarla a prenotare un appuntamento. Come posso aiutarla?
+User: Sì allora dimmi come si fa il cambio di residenza.
+AI: Mi scusi, può ripetere la domanda sul cambio di
+AI: residenza in modo diverso? Così posso aiutarla meglio.
+User: Il cambio di residenza o fare il cambio di residenza?
+AI: Mi dispiace, sto avendo difficoltà Rechup Oa a recuperare l'informazione.
+AI: Può contattare il comune di Cherasco al numero 0 1 7 2. 4 2 7 0 1 0 per dettagli sul cambio di residenza. Vuole prenotare un appuntamento all'anagrafe per il cambio di residenza?
+","The user inquired about the process for changing residency. The AI assistant struggled to understand the request and provide the necessary information. Ultimately, the AI advised the user to contact the municipality directly or book an appointment for details on the residency change.",false,https://storage.vapi.ai/019ea142-657d-7000-a2ac-8e867447f198-1780821996875-570eb6dc-7de4-4a94-9376-a735bf7ba4ae-mono.wav,0.0767,,,2026-06-07 08:45:43 GMT+0,2026-06-07 08:46:39 GMT+0
+019ea141-c18a-7000-950d-af2be517f366,f3ea426c-c818-4c51-bdea-93bd5f938a5b,,,,,,,,call.in-progress.error-assistant-did-not-receive-customer-audio,webCall,0,2026-06-07 08:45:17 GMT+0,2026-06-07 08:45:17 GMT+0,,,,https://storage.vapi.ai/019ea141-c18a-7000-950d-af2be517f366-1780821920019-0dc927fd-8762-494f-918d-47bee538938e-mono.wav,0.0028,,,2026-06-07 08:45:01 GMT+0,2026-06-07 08:45:20 GMT+0

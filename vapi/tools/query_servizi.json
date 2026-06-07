@@ -2,7 +2,7 @@
   "type": "function",
   "function": {
     "name": "query_servizi",
-    "description": "Recupera informazioni ufficiali sui servizi del Comune di Cherasco (es. TARI, anagrafe, stato civile, SUAP, certificati): come funziona un servizio, costi, documenti necessari, tempi, contatti. Chiama questo tool OGNI VOLTA che il cittadino fa una domanda informativa su un servizio comunale. Non rispondere a memoria: usa solo cio che torna da questo tool.",
+    "description": "Recupera informazioni ufficiali sui servizi del Comune di Cherasco (es. cambio di residenza, anagrafe, stato civile, SUAP, certificati): come funziona un servizio, costi, documenti necessari, tempi, contatti. Chiama questo tool OGNI VOLTA che il cittadino fa una domanda informativa su un servizio comunale. Non rispondere a memoria: usa solo cio che torna da questo tool.",
     "parameters": {
       "type": "object",
       "properties": {

@@ -161,7 +161,9 @@ sequenceDiagram
 
 ### Recupero informazioni (runtime)
 
-Questo è il flusso quando il cittadino chiede, per esempio: "Come funziona la TARI?"
+Questo è il flusso quando il cittadino chiede, per esempio: "Come faccio il cambio di residenza?"
+(servizio presente nel corpus; per una domanda fuori corpus — es. "Come funziona la TARI?" — il
+passo 6 restituisce `non_disponibile` e il fallback contatti).
 
 1. **Il cittadino parla.** Vapi trascrive la frase in testo.
 2. **Vapi sceglie il tool `query_servizi`.** Invia al backend la domanda come corpo JSON
@@ -387,7 +389,7 @@ miglioramento naturale è salvare l'indice su file (`.npz`) o passare a FAISS.
 | Retrieval | dense, cosine, **top_k=3**, soglia **0.85**, cap caratteri 2000 | compatto per la voce e per i crediti Vapi |
 | Fallback | contatto Comune + URL prenotazione da config | se il corpus non copre la domanda, Vapi indirizza al Comune invece di inventare |
 | Grounding | prompt "usa solo il contesto; se non c'è, dillo; non inventare; cita la fonte" | anti-allucinazione, vive nel prompt Vapi |
-| Sanity-check | eval set 15 Q&A sul corpus reale | soglia scelta con evidenza, non a sentimento |
+| Sanity-check | eval set 14 Q&A sul corpus reale (8 in-dominio, 6 fuori) | soglia scelta con evidenza, non a sentimento |
 
 > **Disciplina E5** (con `multilingual-e5-base`): prefissare `query:` per le domande e `passage:` per
 > i testi indicizzati, e **normalizzare** (L2) gli embedding prima della cosine. Saltarlo degrada il
@@ -402,10 +404,10 @@ Il tool non risponde con una frase pronta. Risponde con materiale verificabile:
   "esito": "ok",
   "risultati": [
     {
-      "servizio": "Tassa sui rifiuti (TARI)",
+      "servizio": "Cambio di residenza",
       "sezione": "Descrizione",
-      "testo": "Tassa sui rifiuti (TARI)...",
-      "fonte": "Comune di Cherasco - Ufficio Tributi"
+      "testo": "Cambio di residenza...",
+      "fonte": "Comune di Cherasco - Anagrafe e stato civile"
     }
   ]
 }

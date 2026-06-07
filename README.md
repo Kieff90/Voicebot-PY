@@ -60,7 +60,8 @@ Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema).
 
 - `backend/` — API FastAPI: recupero informazioni, gestione appuntamenti e pannello web prenotazioni
 - `ingestion/` — acquisizione e indicizzazione dei contenuti del sito (offline)
-- `vapi/` — configurazione dell'assistente da importare in Vapi
+- `vapi/` — configurazione dell'assistente da importare in Vapi; `vapi/demo/` raccoglie le chiamate
+  di prova (trascrizioni, registrazioni, export) che dimostrano l'integrazione voce/tool
 - `docs/` — `BLUEPRINT.md` (design del sistema), `NOTA_SCELTE_LIMITI.md` (scelte, limiti, migliorie), `architecture.html` (diagrammi apribili nel browser).
 
 ## Stato
