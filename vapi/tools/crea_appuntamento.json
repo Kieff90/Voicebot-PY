@@ -1,0 +1,32 @@
+{
+  "type": "function",
+  "function": {
+    "name": "crea_appuntamento",
+    "description": "Crea (prenota) un appuntamento a uno sportello del Comune di Cherasco. Chiama questo tool SOLO dopo aver verificato la disponibilita con il tool disponibilita e aver raccolto e confermato con il cittadino: servizio, data, ora e nome.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "servizio": {
+          "type": "string",
+          "description": "Lo sportello o servizio comunale dell'appuntamento."
+        },
+        "data": {
+          "type": "string",
+          "description": "La data dell'appuntamento in formato AAAA-MM-GG (ISO 8601)."
+        },
+        "ora": {
+          "type": "string",
+          "description": "L'ora dell'appuntamento in formato HH:MM (es. 10:00)."
+        },
+        "nome": {
+          "type": "string",
+          "description": "Nome e cognome del cittadino che prenota."
+        }
+      },
+      "required": ["servizio", "data", "ora", "nome"]
+    }
+  },
+  "server": {
+    "url": "https://mummy-bronze-ferocious.ngrok-free.dev/tools/crea_appuntamento"
+  }
+}

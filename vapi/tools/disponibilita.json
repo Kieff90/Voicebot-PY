@@ -1,0 +1,24 @@
+{
+  "type": "function",
+  "function": {
+    "name": "disponibilita",
+    "description": "Verifica gli orari liberi per un appuntamento a uno sportello del Comune di Cherasco in una certa data. Chiama questo tool PRIMA di creare un appuntamento, per proporre al cittadino gli slot disponibili.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "servizio": {
+          "type": "string",
+          "description": "Lo sportello o servizio comunale (es. anagrafe, SUAP, tributi)."
+        },
+        "data": {
+          "type": "string",
+          "description": "La data dell'appuntamento in formato AAAA-MM-GG (ISO 8601)."
+        }
+      },
+      "required": ["servizio", "data"]
+    }
+  },
+  "server": {
+    "url": "https://mummy-bronze-ferocious.ngrok-free.dev/tools/disponibilita"
+  }
+}

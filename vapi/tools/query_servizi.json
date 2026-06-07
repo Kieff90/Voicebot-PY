@@ -1,0 +1,20 @@
+{
+  "type": "function",
+  "function": {
+    "name": "query_servizi",
+    "description": "Recupera informazioni ufficiali sui servizi del Comune di Cherasco (es. TARI, anagrafe, stato civile, SUAP, certificati): come funziona un servizio, costi, documenti necessari, tempi, contatti. Chiama questo tool OGNI VOLTA che il cittadino fa una domanda informativa su un servizio comunale. Non rispondere a memoria: usa solo cio che torna da questo tool.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "domanda": {
+          "type": "string",
+          "description": "La domanda del cittadino sui servizi comunali, in italiano, cosi come l'ha espressa."
+        }
+      },
+      "required": ["domanda"]
+    }
+  },
+  "server": {
+    "url": "https://mummy-bronze-ferocious.ngrok-free.dev/tools/query_servizi"
+  }
+}

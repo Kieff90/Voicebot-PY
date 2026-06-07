@@ -2,7 +2,6 @@
 
 > Come è progettato il sistema: cosa fa, architettura, componenti, flussi, modello dati,
 > approccio RAG, decisioni tecniche e motivazioni. Documento di riferimento unico.
-> Per stato e prossimi passi vedi [ROADMAP.md](ROADMAP.md).
 
 Mappa rapida del documento:
 
@@ -38,7 +37,7 @@ appuntamenti**: recupera dati e applica regole, ma **non contiene un modello gen
 
 ```mermaid
 flowchart LR
-  C[Cittadino] -- voce --> V[Assistente vocale<br/>Vapi: Deepgram it · GPT-4o · voce IT]
+  C[Cittadino] -- voce --> V[Assistente vocale<br/>Vapi: Deepgram it · GPT-4.1 · voce IT]
   V -- voce --> C
   V -- tool: query_servizi --> B[Backend FastAPI<br/>via ngrok]
   V -- tool: disponibilita --> B
@@ -46,21 +45,21 @@ flowchart LR
   B -- results --> V
   B --> R[(Indice servizi<br/>cosine NumPy)]
   B --> D[(SQLite<br/>appuntamenti)]
-  FS[(services_cherasco.jsonl<br/>198 chunk testuali)]
+  FS[(services_cherasco.jsonl<br/>184 chunk testuali)]
   FS --> R
   SC[Scraping<br/>crawl4ai] -. offline .-> CB[Corpus building<br/>pulizia + metadata]
   CB -. offline .-> R
 ```
 
 **Componenti:**
-- **Assistente vocale (Vapi):** trascrizione Deepgram in italiano, modello GPT-4o, voce italiana,
+- **Assistente vocale (Vapi):** trascrizione Deepgram in italiano, modello GPT-4.1, voce italiana,
   instradamento verso i tool.
 - **Backend (FastAPI):** espone gli endpoint chiamati dai tool. Contiene recupero semantico e logica
   appuntamenti. Nessun modello generativo.
 - **Corpus servizi (`services_cherasco.jsonl`):** file testuale generato dallo scraper. Contiene
-  198 chunk reali estratti da 25 servizi del sito di Cherasco. Ogni chunk ha testo, servizio,
+  184 chunk reali estratti da 25 servizi del sito di Cherasco. Ogni chunk ha testo, servizio,
   sezione, fonte e data aggiornamento se disponibile.
-- **Indice dei servizi:** matrice `198 x 768` di vettori densi E5 costruita dal backend a partire
+- **Indice dei servizi:** matrice `184 x 768` di vettori densi E5 costruita dal backend a partire
   dal corpus; resta in memoria RAM e viene interrogata con cosine similarity in NumPy. Non è SQLite,
   non è Supabase e non è un vector database esterno. FAISS resta un'evoluzione se il corpus cresce.
 - **Database appuntamenti (SQLite):** salva solo appuntamenti, codici di conferma e slot occupati.
@@ -79,7 +78,7 @@ Ci sono due memorie diverse:
 
 Il backend non "decodifica" i vettori in parole. Ogni vettore resta collegato al suo testo originale:
 quando il backend trova un vettore simile alla domanda, recupera il **chunk testuale originale** e lo
-manda a Vapi. Vapi usa GPT-4o per trasformare quei chunk in una risposta parlata.
+manda a Vapi. Vapi usa GPT-4.1 per trasformare quei chunk in una risposta parlata.
 
 Il percorso del corpus è configurabile con `RAG_CORPUS_PATH`: per la demo reale va puntato a
 `data/services_cherasco.jsonl`; `data/fallback_services.jsonl` resta un corpus statico di sicurezza.
@@ -96,10 +95,10 @@ flowchart TD
   C --> D["Scoperta URL<br/>/servizi → /servizio/... → /servizi/faq/..."]
   D --> E["Estrazione sezioni AGID<br/>A chi è rivolto, Descrizione,<br/>Come fare, Cosa serve..."]
   E --> F["Corpus building + chunking<br/>script Python scraper_cherasco.py"]
-  F --> G["data/services_cherasco.jsonl<br/>198 chunk da 25 servizi"]
+  F --> G["data/services_cherasco.jsonl<br/>184 chunk da 25 servizi"]
   G --> H["Embedding chunk + metadati<br/>sentence-transformers<br/>modello intfloat/multilingual-e5-base<br/>768 dimensioni"]
-  H --> I["Indice servizi in RAM<br/>matrice 198 x 768<br/>cosine NumPy"]
-  I --> J["Tool query_servizi<br/>top_k=3, soglia 0.84,<br/>fallback contatti"]
+  H --> I["Indice servizi in RAM<br/>matrice 184 x 768<br/>cosine NumPy"]
+  I --> J["Tool query_servizi<br/>top_k=3, soglia 0.85,<br/>fallback contatti"]
 ```
 
 | Azione fatta | Strumento usato | File/modulo | Output |
@@ -108,17 +107,18 @@ flowchart TD
 | Trovare categorie e pagine servizio | BeautifulSoup + regex URL | `scraper_cherasco.py` | 25 URL `/servizi/faq/...` |
 | Estrarre contenuti utili | BeautifulSoup su sezioni AGID | `_estrai_sezioni()` | testo per sezione servizio |
 | Costruire chunk e metadati | Python script | `scraper_cherasco.py` | `testo`, `servizio`, `sezione`, `fonte`, `aggiornato` |
-| Salvare corpus persistente | JSONL | `data/services_cherasco.jsonl` | 198 righe, una per chunk |
+| Scartare stub boilerplate | filtro a regole | `ingestion/pulizia.py` | 14 rinvii vuoti all'ufficio rimossi (198→184) |
+| Salvare corpus persistente | JSONL | `data/services_cherasco.jsonl` | 184 righe, una per chunk |
 | Preparare testo da embeddare | Python dataclass `Chunk` | `services/rag/corpus.py` | `servizio — sezione: testo` |
 | Creare embedding | `sentence-transformers` + `intfloat/multilingual-e5-base` | `services/rag/embedder.py` | vettori densi a 768 dimensioni |
-| Costruire indice | NumPy | `services/rag/index.py` | matrice `198 x 768` in RAM |
+| Costruire indice | NumPy | `services/rag/index.py` | matrice `184 x 768` in RAM |
 | Cercare risposte | cosine similarity + gate | `services/rag/retriever.py` | chunk pertinenti o fallback contatti |
 
 Nota importante: il file persistente è il JSONL con i chunk testuali. I vettori non vengono salvati
 su disco: vengono ricostruiti in RAM alla prima chiamata RAG e rimangono in cache finché il backend è
 attivo.
 
-Questa non è una RAG solo "testo grezzo → vettore": ogni chunk porta anche metadati. In particolare
+Ogni chunk porta anche metadati, oltre al testo grezzo trasformato in vettore. In particolare
 `servizio` e `sezione` vengono usati **prima** dell'embedding per dare contesto al vettore; `fonte` e
 `aggiornato` restano fuori dal vettore e vengono usati nell'output verso Vapi.
 
@@ -136,11 +136,11 @@ sequenceDiagram
   C->>V: fornisce i dati
   V->>B: tool-call disponibilita(servizio, data)
   B->>DB: slot liberi
-  B-->>V: results[] (slot liberi / pieno)
+  B-->>V: result (slot liberi / pieno)
   alt slot libero
     V->>B: tool-call crea_appuntamento(...)
     B->>DB: insert (vincolo UNIQUE anti doppia-prenotazione)
-    B-->>V: results[] (confermato + codice)
+    B-->>V: result (confermato + codice)
     V->>C: conferma vocale + riepilogo
   else slot pieno
     V->>C: propone alternative
@@ -152,19 +152,20 @@ sequenceDiagram
 Questo è il flusso quando il cittadino chiede, per esempio: "Come funziona la TARI?"
 
 1. **Il cittadino parla.** Vapi trascrive la frase in testo.
-2. **Vapi sceglie il tool `query_servizi`.** Invia al backend la domanda dentro il contratto
-   `toolCallList`.
-3. **Il backend valida la domanda.** Se manca o è malformata, restituisce errore dentro `results[]`.
-4. **Il backend crea l'embedding della domanda.** Usa un modello di embedding locale, non GPT-4o.
+2. **Vapi sceglie il tool `query_servizi`.** Invia al backend la domanda come corpo JSON
+   `{ "domanda": "..." }`.
+3. **Il backend valida la domanda.** Se manca o è malformata, restituisce un `result` con
+   `{"esito":"errore",...}`.
+4. **Il backend crea l'embedding della domanda.** Usa un modello di embedding locale, non GPT-4.1.
    Un embedding è una lista di numeri che rappresenta il significato della frase.
 5. **Il backend cerca i vettori più vicini.** Confronta il vettore della domanda con i vettori dei
    chunk del corpus usando cosine similarity in NumPy.
-6. **Il backend applica una soglia (0.84, tarata su eval set reale).** Se il risultato migliore è
+6. **Il backend applica una soglia (0.85, tarata su eval set reale).** Se il risultato migliore è
    troppo debole, restituisce `{"esito":"non_disponibile", "contatto": {...}}` con telefono e link
    prenotazione: Vapi dice che non ha l'informazione e indirizza al Comune. Meglio che inventare.
 7. **Il backend restituisce i chunk originali.** Non genera una risposta finale; restituisce testo
    compatto + fonte.
-8. **Vapi formula la risposta parlata.** GPT-4o usa solo quei chunk per rispondere al cittadino.
+8. **Vapi formula la risposta parlata.** GPT-4.1 usa solo quei chunk per rispondere al cittadino.
 
 ### Dall'acquisizione all'indice (riepilogo tecnico)
 ```
@@ -182,8 +183,8 @@ render, BeautifulSoup estrae link e sezioni.
 |---|---|---|
 | Scoperta URL | `ingestion/scraper_cherasco.py` | pagina `/servizi` → categorie `/servizio/...` → 25 pagine `/servizi/faq/...` |
 | Estrazione sezioni | `crawl4ai` + Playwright + BeautifulSoup | sezioni AGID: "A chi è rivolto", "Descrizione", "Come fare", ecc. |
-| Corpus building / chunking | `scraper_cherasco.py` | `data/services_cherasco.jsonl`, 198 righe: un chunk per sezione utile |
-| Embedding dei chunk | backend alla prima chiamata RAG, tramite `services/rag/embedder.py` | matrice `198 x 768` di vettori densi |
+| Corpus building / chunking | `scraper_cherasco.py` | `data/services_cherasco.jsonl`, 184 righe: un chunk per sezione utile |
+| Embedding dei chunk | backend alla prima chiamata RAG, tramite `services/rag/embedder.py` | matrice `184 x 768` di vettori densi |
 | Ricerca | backend a runtime, tramite `services/rag/index.py` e `retriever.py` | top 3 chunk sopra soglia |
 
 Formato di un chunk:
@@ -204,21 +205,26 @@ entrano nell'embedding: servono per trasparenza e freschezza del dato.
 
 ## 5. Contratto dei tool
 
-Ogni tool Vapi (API Request) ha il proprio `server.url` → un endpoint. Tutti ricevono lo **stesso
-envelope** e rispondono con lo **stesso formato**. Un `vapi_adapter` fa unwrap/rewrap; il router
-delega al service.
+Ogni tool Vapi (API Request) ha il proprio `server.url`, un endpoint del backend. Il contratto è
+JSON semplice: Vapi manda in POST gli argomenti estratti dalla conversazione, il backend risponde
+con il risultato grezzo, senza envelope. Il router (`routers/tools.py`) riceve `payload: dict` e
+lo passa al service.
 
 ```text
-IN  (Vapi → backend):  { "message": { "type": "tool-calls",
-                         "toolCallList": [ { "id", "name", "arguments": {…} } ] } }
-OUT (backend → Vapi):  { "results": [ { "toolCallId": "<stesso id>", "result": <…> } ] }
+IN  (Vapi → backend):  { "domanda": "..." }
+OUT (backend → Vapi):  { "esito": "ok", "risultati": [ {…} ] }
 ```
 
-| Endpoint | `arguments` | `result` | Service |
+| Endpoint | corpo della richiesta | `result` | Service |
 |---|---|---|---|
 | `POST /tools/query_servizi` | `{ "domanda": str }` | top-k chunk rilevanti (testo + fonte) | `services/rag/retriever.py` |
 | `POST /tools/disponibilita` | `{ "servizio", "data" }` | slot liberi / "pieno" | `services/appointments/booking.py` |
 | `POST /tools/crea_appuntamento` | `{ "servizio", "data", "ora", "nome" }` | conferma + codice, oppure errore | `services/appointments/booking.py` |
+
+La validazione Pydantic (`AvailabilityRequest`, `AppointmentRequest`, `QueryRequest` in `models/`)
+avviene dentro il service, non nel router: in caso di input mancante o malformato il service
+intercetta l'errore di validazione e restituisce `{"esito":"errore","motivo":…}` invece di
+sollevare un'eccezione HTTP.
 
 `query_servizi` restituisce **chunk compatti**, non una frase pronta: la formulazione resta a Vapi
 (confine retriever/generatore), e risultati compatti proteggono il budget voce.
@@ -228,7 +234,7 @@ OUT (backend → Vapi):  { "results": [ { "toolCallId": "<stesso id>", "result":
 > `verifica_appuntamento`. Fuori scope per ora — candidato a domanda di chiarimento a CAI.
 
 Gli errori logici (input incompleto, slot occupato) **non** restituiscono HTTP 4xx ma un `result`
-con `{"esito":"errore","motivo":…}`: Vapi deve sempre ricevere `results[]` da pronunciare.
+con `{"esito":"errore","motivo":…}`: Vapi deve sempre ricevere un risultato da pronunciare.
 
 ## 6. Struttura del backend
 
@@ -239,12 +245,10 @@ backend/app/
 ├── main.py                 # crea l'app FastAPI, monta i router
 ├── config.py               # env var validate (pydantic-settings)
 ├── deps.py                 # dependency injection (repository) — override-abile nei test
-├── vapi_adapter.py         # contratto Vapi ⇄ chiamate interne (unwrap/rewrap)
 ├── routers/
 │   ├── health.py           # GET /health
 │   └── tools.py            # POST /tools/disponibilita · /crea_appuntamento · /query_servizi
-├── models/                 # Pydantic = validazione al confine
-│   ├── vapi.py             #   ToolCall, ToolCallEnvelope
+├── models/                 # Pydantic = validazione al confine, usata dentro i service
 │   ├── appointment.py      #   AvailabilityRequest, AppointmentRequest
 │   └── rag.py              #   QueryRequest per query_servizi
 ├── services/               # IL CUORE (logica pura, zero HTTP/Vapi)
@@ -265,7 +269,6 @@ Validazione Pydantic al confine: non ci si fida dell'input dell'LLM (campi manca
 
 | Modello | Campi | Nota |
 |---|---|---|
-| `ToolCallEnvelope` | `message.toolCallList[]` | parsing payload Vapi; `arguments` accettato come oggetto **o** stringa JSON |
 | `AvailabilityRequest` | `servizio`, `data` | valida data ISO |
 | `AppointmentRequest` | `servizio`, `data`, `ora`, `nome` | valida data ISO + ora `HH:MM`; rifiuta input incompleto |
 | `QueryRequest` | `domanda` | valida il tool `query_servizi`; rifiuta domanda mancante o non testuale |
@@ -276,9 +279,9 @@ anti doppia-prenotazione: la garanzia sta nel database, non nel codice.
 
 ## 8. RAG — retriever (non generatore)
 
-L'LLM generativo è già in Vapi (GPT-4o); il backend fa **solo recupero** e restituisce i chunk
-rilevanti come `result`. → Meno latenza, meno costo, meno codice: si saltano gli step
-"generation/serving" della teoria RAG.
+L'LLM generativo è già in Vapi (GPT-4.1); il backend fa **solo recupero** e restituisce i chunk
+rilevanti come `result`. Si saltano così gli step "generation/serving" della teoria RAG, con meno
+latenza, meno costo e meno codice.
 
 ### Cosa significa "embedding" qui
 
@@ -318,7 +321,7 @@ Ogni chunk ha cinque campi:
 | `fonte` | no | permette a Vapi di citare o verificare la provenienza |
 | `aggiornato` | no | traccia la freschezza del dato quando disponibile |
 
-Il testo effettivamente embeddato non è solo il paragrafo, ma:
+Il testo effettivamente embeddato unisce paragrafo e metadati nel formato:
 
 ```text
 servizio — sezione: testo
@@ -334,11 +337,11 @@ Nella prima implementazione non c'è un database vettoriale. I dati sono separat
 
 | Dato | Persistenza |
 |---|---|
-| Testi dei servizi | `data/services_cherasco.jsonl` (198 chunk) o fallback statico |
+| Testi dei servizi | `data/services_cherasco.jsonl` (184 chunk) o fallback statico |
 | Vettori dei servizi | RAM del backend, ricostruiti alla prima chiamata/avvio del processo |
 | Appuntamenti | SQLite |
 
-Questa scelta è intenzionale: per 198 chunk una matrice NumPy in memoria è più semplice di Supabase,
+Questa scelta è intenzionale: per 184 chunk una matrice NumPy in memoria è più semplice di Supabase,
 FAISS o un vector DB. Il caricamento reale richiede circa 8 secondi perché carica E5 e costruisce la
 matrice; poi l'indice resta in cache per tutta la vita del processo. Se il corpus cresce molto, il
 miglioramento naturale è salvare l'indice su file (`.npz`) o passare a FAISS.
@@ -347,10 +350,10 @@ miglioramento naturale è salvare l'indice su file (`.npz`) o passare a FAISS.
 | Componente | Scelta | Perché |
 |---|---|---|
 | Ingestion | `crawl4ai` + Playwright + BeautifulSoup | il sito usa JavaScript; serve HTML renderizzato |
-| Chunking | un chunk per sezione AGID utile | semplice e leggibile: 198 chunk da 25 servizi |
+| Chunking | un chunk per sezione AGID utile | semplice e leggibile: 184 chunk da 25 servizi |
 | Embedding | `sentence-transformers` + `intfloat/multilingual-e5-base` | multilingue/italiano, locale, zero token LLM, 768 dimensioni |
-| Indice | **cosine in NumPy, in memoria** | 198 chunk → scan lineare esatto e veloce. FAISS = upgrade se il corpus cresce |
-| Retrieval | dense, cosine, **top_k=3**, soglia **0.84**, cap caratteri 2000 | compatto per la voce e per i crediti Vapi |
+| Indice | **cosine in NumPy, in memoria** | 184 chunk → scan lineare esatto e veloce. FAISS = upgrade se il corpus cresce |
+| Retrieval | dense, cosine, **top_k=3**, soglia **0.85**, cap caratteri 2000 | compatto per la voce e per i crediti Vapi |
 | Fallback | contatto Comune + URL prenotazione da config | se il corpus non copre la domanda, Vapi indirizza al Comune invece di inventare |
 | Grounding | prompt "usa solo il contesto; se non c'è, dillo; non inventare; cita la fonte" | anti-allucinazione, vive nel prompt Vapi |
 | Sanity-check | eval set 15 Q&A sul corpus reale | soglia scelta con evidenza, non a sentimento |
@@ -392,11 +395,15 @@ Se nessun chunk supera la soglia:
 }
 ```
 
-La soglia `0.84` è stata tarata su 15 domande: match in-dominio corretti fra `0.852` e `0.893`,
-fuori-dominio fra `0.793` e `0.818`. La soglia privilegia precisione e prudenza: per un Comune è
-meglio dire "non ho questa informazione" che dare una risposta sbagliata. Il caso CIE resta un gap
-di contenuto: la CIE non è una scheda nel corpus Cherasco, quindi va gestita con fallback o con una
-pagina reale se il Comune la pubblica.
+La soglia `0.85` è stata tarata sul corpus **pulito** (184 chunk, dopo rimozione degli stub
+boilerplate — vedi `ingestion/pulizia.py`) e su un eval set di 14 domande (8 in-dominio, 6 fuori):
+match in-dominio reali fra `0.855` e `0.896`, fuori-dominio `≤0.840` (passaporto `0.838`, carta
+d'identità `0.840`, TARI `0.814`). `0.85` cade nel gap pulito (`0.840 ↔ 0.855`) e non produce falsi
+positivi. La soglia privilegia precisione e prudenza: per un Comune è meglio dire "non ho questa
+informazione" che dare una risposta sbagliata. Carta d'identità/passaporto/TARI **non sono schede nel
+corpus Cherasco** (gap di contenuto): cadono nel fallback contatti, correttamente. Limite di recall
+noto: "aprire un'attività commerciale" si ferma a `0.822` (il SUAP usa "attività produttive"):
+mismatch di vocabolario, non risolvibile con la soglia.
 
 **Cosa NON facciamo ora** (scelta consapevole di dimensionamento, = "miglioramenti con più tempo"):
 reranking (cross-encoder), hybrid (dense+BM25), LangChain/LlamaIndex, vector DB esterni
@@ -409,9 +416,9 @@ reranking (cross-encoder), hybrid (dense+BM25), LangChain/LlamaIndex, vector DB 
 | **Logica nel backend, non in Vapi** | Vapi è orchestratore voce; tenere RAG/regole/persistenza fuori rende il sistema testabile in isolamento e indipendente dal vendor. |
 | **Tool atomici** (3 endpoint, una responsabilità) | l'LLM li sceglie meglio e gli edge case restano isolati. |
 | **Deepgram `language: it`** (non `multi`) | bot solo-italiano: fissare la lingua è più accurato dell'auto-detect. |
-| **GPT-4o** | buon italiano + latenza accettabile nel budget voce; declassabile se la latenza diventa il collo di bottiglia. |
-| **Recupero senza secondo LLM** | la generazione è già in Vapi: niente modello generativo nel backend → costo/latenza minori. |
-| **cosine NumPy, non FAISS** | semplice e veloce su 198 chunk; FAISS documentato come upgrade se il corpus cresce. |
+| **GPT-4.1** | buon italiano + latenza accettabile nel budget voce; declassabile se la latenza diventa il collo di bottiglia. |
+| **Recupero senza secondo LLM** | la generazione è già in Vapi: niente modello generativo nel backend, quindi costo e latenza minori. |
+| **cosine NumPy, non FAISS** | semplice e veloce su 184 chunk; FAISS documentato come upgrade se il corpus cresce. |
 | **SQLite** | persistenza reale (oltre l'in-memory richiesto) con zero overhead operativo. |
 | **`UNIQUE` per l'anti doppia-prenotazione** | garanzia atomica nel DB; un prompt non potrebbe garantirla. |
 | **Validazione al confine (Pydantic)** | l'input dell'LLM non è affidabile; si valida prima di toccare i dati. |
@@ -420,22 +427,22 @@ reranking (cross-encoder), hybrid (dense+BM25), LangChain/LlamaIndex, vector DB 
 
 ## 10. Controlli di qualità (quality gates)
 
-Controlli a ogni stadio, non solo a fine processo:
+Controlli distribuiti lungo tutta la pipeline, dall'ingestione alla consegna:
 
 | Area | Come viene verificata |
 |---|---|
-| **Contratto Vapi** | test sugli endpoint tool e formato `results[]` atteso da Vapi |
+| **Contratto Vapi** | test sugli endpoint tool: corpo della richiesta e formato del `result` restituito |
 | **Appuntamenti** | test su disponibilità, creazione, data futura, slot non valido e doppia prenotazione |
 | **Database SQLite** | vincolo `UNIQUE` sugli slot occupati e test sugli edge case |
-| **Corpus/RAG** | caricamento corpus, numero chunk atteso, query di smoke, soglia `0.84` su eval set |
+| **Corpus/RAG** | caricamento corpus, numero chunk atteso, query di smoke, soglia `0.85` su eval set |
 | **Fallback** | test che sotto soglia ritorni `non_disponibile` + contatto Comune |
 | **Integrazione demo** | smoke test con backend locale esposto via ngrok e tool Vapi configurati |
 
 - **Corpus building:** scarto pagine vuote/brevi, solo italiano, dedup, rimozione boilerplate; ogni
   unità con fonte + data.
 - **Indicizzazione:** indice si carica, n. chunk atteso, query di smoke ok.
-- **Recupero (il più importante):** soglia di similarità → sotto soglia, "informazione non
-  disponibile" invece di rispondere male.
+- **Recupero (il più importante):** soglia di similarità; sotto soglia il backend risponde
+  "informazione non disponibile" invece di rispondere male.
 - **Confine tool:** validazione Pydantic, rifiuto input malformati, timeout.
 - **Appuntamenti:** data/ora valide e future, slot esistente, lock anti doppia-prenotazione.
 - **Pre-consegna:** unit test + mini eval set devono passare.
@@ -453,7 +460,7 @@ Due livelli distinti:
 ## 12. Configurazione dell'assistente Vapi
 
 Da importare/ricreare su Vapi (export in `vapi/assistant.json`, con chiavi/ID rimossi):
-- **Modello:** GPT-4o · **Trascrizione:** Deepgram, lingua italiano · **Voce:** italiana
+- **Modello:** GPT-4.1 · **Trascrizione:** Deepgram, lingua italiano · **Voce:** italiana
 - **Primo messaggio + system prompt** in italiano; il prompt impone di rispondere **solo** sui dati
   recuperati dai tool e di non inventare orari o procedure.
 - **Tre tool API Request** verso gli endpoint `/tools/*`; l'URL è quello di ngrok, da aggiornare a

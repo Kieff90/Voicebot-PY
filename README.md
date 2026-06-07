@@ -14,11 +14,11 @@ backend (esposto in locale tramite ngrok); il backend risponde e l'assistente pr
 La trascrizione, la sintesi vocale e la formulazione della risposta restano all'assistente; il
 recupero delle informazioni e la gestione degli appuntamenti restano al backend.
 
-Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema) e [docs/ROADMAP.md](docs/ROADMAP.md) (fasi e stato).
+Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema).
 
 ## Stack
 
-- Vapi: trascrizione (Deepgram), modello linguistico (GPT-4o), voce italiana
+- Vapi: trascrizione (Deepgram), modello linguistico (GPT-4.1), voce italiana
 - Python, FastAPI
 - Recupero semantico: sentence-transformers + cosine in NumPy (FAISS come upgrade se il corpus cresce)
 - Appuntamenti: SQLite
@@ -32,9 +32,6 @@ Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema) e [docs/
 - ngrok
 
 ## Avvio
-
-> I passi 3-5 valgono una volta implementato il backend (vedi [docs/ROADMAP.md](docs/ROADMAP.md), fase 1).
-> Allo stato attuale `backend/` è ancora vuoto.
 
 1. Creare un ambiente virtuale e installare le dipendenze:
    ```
@@ -57,9 +54,9 @@ Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema) e [docs/
 - `backend/` — API FastAPI: recupero informazioni e gestione appuntamenti
 - `ingestion/` — acquisizione e indicizzazione dei contenuti del sito (offline)
 - `vapi/` — configurazione dell'assistente da importare in Vapi
-- `docs/` — `BLUEPRINT.md` (design del sistema), `ROADMAP.md` (fasi e stato), `architecture.html` (diagrammi apribili nel browser).
+- `docs/` — `BLUEPRINT.md` (design del sistema), `NOTA_SCELTE_LIMITI.md` (scelte, limiti, migliorie), `architecture.html` (diagrammi apribili nel browser).
 
 ## Stato
 
-Primo slice backend (prenotazione) implementato e testato. Dettaglio in [docs/ROADMAP.md](docs/ROADMAP.md);
-progettazione in [docs/BLUEPRINT.md](docs/BLUEPRINT.md).
+Backend di prenotazione e RAG implementati e testati. Progettazione in
+[docs/BLUEPRINT.md](docs/BLUEPRINT.md).
