@@ -37,6 +37,8 @@ def appointments(
 ):
     data_da = _validated_date(data_da)
     data_a = _validated_date(data_a)
+    if data_da and data_a and data_a < data_da:
+        data_a = None
     servizio = servizio if servizio in settings.service_categories else None
 
     righe = repo.list_all(data_da=data_da, data_a=data_a, servizio=servizio)

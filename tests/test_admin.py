@@ -73,3 +73,21 @@ def test_appointments_filters_by_date_range(client):
 def test_appointments_with_malformed_date_does_not_break(client):
     resp = client.get("/admin/appointments?data_da=non-una-data", auth=("admin", "segreto"))
     assert resp.status_code == 200
+
+
+def test_appointments_ignores_end_date_before_start_date(client):
+    client.post(
+        "/tools/crea_appuntamento",
+        json={"servizio": "Altro", "data": "2026-12-01", "ora": "09:00", "nome": "Prima Range"},
+    )
+    client.post(
+        "/tools/crea_appuntamento",
+        json={"servizio": "Altro", "data": "2026-12-10", "ora": "09:00", "nome": "Dopo Range"},
+    )
+
+    resp = client.get(
+        "/admin/appointments?data_da=2026-12-10&data_a=2026-12-01",
+        auth=("admin", "segreto"),
+    )
+    assert "Dopo Range" in resp.text
+    assert "Prima Range" not in resp.text
