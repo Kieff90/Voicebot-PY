@@ -16,6 +16,11 @@ Nota breve richiesta dai criteri di consegna del test. Per il dettaglio architet
   il corpus crescesse molto.
 - SQLite con vincolo `UNIQUE(servizio, data, ora)`: la garanzia anti doppia-prenotazione sta nel
   database, non nel codice applicativo.
+- Persistenza su database fin dal primo slice (non in memoria): le prenotazioni sopravvivono al
+  riavvio del backend, requisito aggiuntivo dei criteri di consegna soddisfatto fin dall'inizio.
+- Pannello admin di sola lettura (`/admin/appointments`, Jinja2 server-side, protetto da HTTP
+  Basic): copre il requisito aggiuntivo "frontend per visualizzare gli appuntamenti prenotati" con
+  filtri per data e categoria servizio, senza JavaScript né stato lato client.
 - Validazione Pydantic al confine: l'input che arriva dall'LLM non è affidabile, può mancare o
   avere un formato inatteso.
 - Fallback statico per il corpus: la demo non dipende dalla riuscita live di scraping e
