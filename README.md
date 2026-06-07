@@ -16,7 +16,8 @@ recupero delle informazioni e la gestione degli appuntamenti restano al backend.
 
 Oltre agli endpoint vocali, il backend espone un pannello web di sola lettura
 (`/admin/appointments`) per consultare gli appuntamenti prenotati, con filtri per intervallo di date
-e categoria di servizio. È una pagina HTML generata lato server, senza login e senza JavaScript di
+e categoria di servizio. È una pagina HTML generata lato server (protetta da HTTP Basic via
+`ADMIN_USER`/`ADMIN_PASSWORD`, disabilitata di default — vedi `.env.example`) e senza JavaScript di
 build, pensata per uno sportello che vuole vedere a colpo d'occhio le prenotazioni registrate.
 
 Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema).

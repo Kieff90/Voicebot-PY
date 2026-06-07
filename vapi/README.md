@@ -9,7 +9,11 @@ Cherasco, da ricreare/importare su Vapi e da consegnare come parte del test.
 - `tools/query_servizi.json` — tool informazioni servizi → `POST /tools/query_servizi`.
 - `tools/disponibilita.json` — tool verifica disponibilità → `POST /tools/disponibilita`.
 - `tools/crea_appuntamento.json` — tool prenotazione → `POST /tools/crea_appuntamento`.
-- `assistant.json` — export finale dell'assistante (aggiunto a fine wiring, con chiavi/ID rimossi).
+- `assistant.json` — export finale dell'assistente (prompt/modello/voce; chiavi e ID rimossi).
+  **Non contiene i collegamenti ai tool**: gli ID dei tool sono specifici dell'account Vapi
+  dell'autore e non si possono reimportare in un altro account. Per questo i tool restano file
+  separati (`tools/*.json`) da ricreare e collegare seguendo il passo 6 della procedura sotto —
+  l'import genera ID nuovi, validi nell'account di chi importa.
 
 ## Parametri scelti
 

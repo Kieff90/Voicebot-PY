@@ -441,18 +441,14 @@ reranking (cross-encoder), hybrid (dense+BM25), LangChain/LlamaIndex, vector DB 
 
 ## 9. Decisioni tecniche & motivazioni
 
+Le scelte su persistenza, recupero, tool e validazione — con le relative motivazioni — sono
+raccolte in [NOTA_SCELTE_LIMITI.md](NOTA_SCELTE_LIMITI.md) (documento di riferimento per i criteri
+di consegna). Qui solo le decisioni più legate alla configurazione di Vapi:
+
 | Decisione | Perché |
 |---|---|
-| **Logica nel backend, non in Vapi** | Vapi è orchestratore voce; tenere RAG/regole/persistenza fuori rende il sistema testabile in isolamento e indipendente dal vendor. |
-| **Tool atomici** (3 endpoint, una responsabilità) | l'LLM li sceglie meglio e gli edge case restano isolati. |
 | **Deepgram `language: it`** (non `multi`) | bot solo-italiano: fissare la lingua è più accurato dell'auto-detect. |
 | **GPT-4.1** | buon italiano + latenza accettabile nel budget voce; declassabile se la latenza diventa il collo di bottiglia. |
-| **Recupero senza secondo LLM** | la generazione è già in Vapi: niente modello generativo nel backend, quindi costo e latenza minori. |
-| **cosine NumPy, non FAISS** | semplice e veloce su 184 chunk; FAISS documentato come upgrade se il corpus cresce. |
-| **SQLite** | persistenza reale (oltre l'in-memory richiesto) con zero overhead operativo. |
-| **`UNIQUE` per l'anti doppia-prenotazione** | garanzia atomica nel DB; un prompt non potrebbe garantirla. |
-| **Validazione al confine (Pydantic)** | l'input dell'LLM non è affidabile; si valida prima di toccare i dati. |
-| **Fallback statico** | la demo non deve dipendere dalla riuscita live di scraping/index. |
 | **Niente over-engineering** | no Squads/multi-agent, no reranking/vector DB, no numero telefonico reale, no HIPAA/ZDR: fuori scope, consumerebbero tempo/budget senza valore. |
 
 ## 10. Controlli di qualità (quality gates)
@@ -501,10 +497,10 @@ Da importare/ricreare su Vapi (export in `vapi/assistant.json`, con chiavi/ID ri
 
 ## 13. Limiti noti e miglioramenti futuri
 
-**Limiti:** l'URL ngrok è legato a chi espone il backend — chi clona la repo per testarla deve
-sostituirlo nei tool con il proprio (vedi `vapi/README.md`); senza dominio statico cambia anche ad
-ogni riavvio dello stesso account. L'acquisizione dipende dalla
-struttura del sito comunale; il budget del trial vocale è limitato (test mirati).
+**Limiti:** vedi [NOTA_SCELTE_LIMITI.md](NOTA_SCELTE_LIMITI.md#limitazioni) per l'elenco completo
+(esposizione via ngrok, dipendenza dalla struttura del sito, soglia di recupero, budget del trial).
+Nota specifica per chi clona la repo: l'URL ngrok è legato all'account di chi espone il backend e
+va sostituito nei tool prima di testare (procedura in `vapi/README.md`).
 
 **Con più tempo:** reranking con cross-encoder su una KB più ampia; recupero ibrido per match esatti
 (codici, nomi uffici); deploy stabile del backend (no ngrok in demo); set di valutazione del recupero
