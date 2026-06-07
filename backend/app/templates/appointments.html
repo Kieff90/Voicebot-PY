@@ -64,5 +64,20 @@
     {% else %}
     <p>Nessun appuntamento prenotato.</p>
     {% endif %}
+
+    <script>
+        // Il campo "Al" non puo' precedere "Dal": aggiorna il vincolo min
+        // in tempo reale, cosi' i giorni anteriori non sono selezionabili.
+        const data_da = document.getElementById("data_da");
+        const data_a = document.getElementById("data_a");
+        function syncMin() {
+            data_a.min = data_da.value;
+            if (data_a.value && data_a.value < data_da.value) {
+                data_a.value = data_da.value;
+            }
+        }
+        data_da.addEventListener("change", syncMin);
+        syncMin();
+    </script>
 </body>
 </html>

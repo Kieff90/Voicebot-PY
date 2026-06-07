@@ -61,6 +61,14 @@ def test_appointments_end_date_field_disables_days_before_start_date(client):
     assert 'id="data_a" name="data_a" value="" min="2026-06-10"' in resp.text
 
 
+def test_appointments_end_date_field_syncs_min_live_from_start_date(client):
+    # Il campo "Al" deve aggiornare il proprio min in tempo reale quando
+    # cambia "Dal", senza dover prima inviare il form.
+    resp = client.get("/admin/appointments")
+    assert 'data_da.addEventListener' in resp.text
+    assert 'data_a.min = data_da.value' in resp.text
+
+
 def test_appointments_ignores_end_date_before_start_date(client):
     client.post(
         "/tools/crea_appuntamento",
