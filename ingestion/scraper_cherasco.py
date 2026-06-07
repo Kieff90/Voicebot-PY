@@ -16,6 +16,8 @@ import re
 import sys
 from pathlib import Path
 
+from ingestion.pulizia import filtra_chunk
+
 BASE_URL = "https://www.comune.cherasco.cn.it"
 SERVIZI_URL = f"{BASE_URL}/servizi"
 OUTPUT_PATH = Path("data/services_cherasco.jsonl")
@@ -158,11 +160,18 @@ async def main() -> None:
             chunks = await _scrapa_servizio(crawler, url, nome)
             all_chunks.extend(chunks)
 
+    # Corpus building: scarta i chunk-stub senza contenuto (rinvii all'ufficio).
+    grezzi = len(all_chunks)
+    all_chunks = filtra_chunk(all_chunks)
+
     with OUTPUT_PATH.open("w", encoding="utf-8") as f:
         for chunk in all_chunks:
             f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
 
-    print(f"\nCorpus salvato: {OUTPUT_PATH} ({len(all_chunks)} chunk da {len(servizi)} servizi)")
+    print(
+        f"\nCorpus salvato: {OUTPUT_PATH} ({len(all_chunks)} chunk da {len(servizi)} "
+        f"servizi; {grezzi - len(all_chunks)} stub scartati)"
+    )
 
 
 if __name__ == "__main__":

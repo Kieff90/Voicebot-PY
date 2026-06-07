@@ -11,11 +11,13 @@ class Settings(BaseSettings):
     rag_corpus_path: str = "data/fallback_services.jsonl"
     rag_model_name: str = "intfloat/multilingual-e5-base"
     rag_top_k: int = 3
-    # Tarata su eval set 15 Q&A sul corpus reale (9 in-dominio, 6 fuori).
-    # In-dominio corretti: 0.852-0.893; fuori-dominio: 0.793-0.818 (escluso CIE,
-    # assente dal corpus → 0.856, gap di contenuto non risolvibile con la soglia).
-    # 0.84 sta nel gap pulito (0.818 ↔ 0.852), favorendo la precisione.
-    rag_threshold: float = 0.84
+    # Tarata su corpus PULITO (184 chunk, dopo rimozione stub boilerplate) ed
+    # eval set di 14 Q&A (8 in-dominio, 6 fuori). In-dominio reali: 0.855-0.896;
+    # fuori-dominio: ≤0.840 (passaporto 0.838, carta d'identità 0.840, TARI 0.814).
+    # 0.85 sta nel gap pulito (0.840 ↔ 0.855), favorendo la precisione: nessun
+    # falso positivo. Resta fuori il solo "attività commerciale" (SUAP, 0.822):
+    # mismatch di vocabolario ("produttive" vs "commerciale"), limite di recall.
+    rag_threshold: float = 0.85
     rag_char_cap: int = 2000
 
     # Fallback quando l'informazione non e nel corpus: il backend fornisce i
