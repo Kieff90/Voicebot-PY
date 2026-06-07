@@ -72,7 +72,7 @@ Dettagli in [docs/BLUEPRINT.md](docs/BLUEPRINT.md) (design del sistema).
 - `ingestion/` — acquisizione e indicizzazione dei contenuti del sito (offline)
 - `vapi/` — configurazione dell'assistente da importare in Vapi; `vapi/demo/` raccoglie le chiamate
   di prova (trascrizioni, registrazioni, export) che dimostrano l'integrazione voce/tool
-- `docs/` — `BLUEPRINT.md` (design del sistema), `NOTA_SCELTE_LIMITI.md` (scelte, limiti, migliorie), `architecture.html` (diagrammi apribili nel browser).
+- `docs/` — `BLUEPRINT.md` (design del sistema, con i diagrammi di architettura), `NOTA_SCELTE_LIMITI.md` (scelte, limiti, migliorie).
 
 ## Stato
 
