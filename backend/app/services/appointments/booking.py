@@ -1,6 +1,6 @@
 import secrets
 import sqlite3
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import ValidationError
 
@@ -29,7 +29,11 @@ def disponibilita(
 
 
 def crea_appuntamento(
-    repo: AppointmentRepository, arguments: dict, slot_hours: list[str]
+    repo: AppointmentRepository,
+    arguments: dict,
+    slot_hours: list[str],
+    *,
+    now: datetime | None = None,
 ) -> dict:
     try:
         req = AppointmentRequest.model_validate(arguments)
@@ -38,7 +42,12 @@ def crea_appuntamento(
 
     if req.ora not in slot_hours:
         return _errore("orario non disponibile")
-    if date.fromisoformat(req.data) < date.today():
+
+    now = now or datetime.now()
+    data_richiesta = date.fromisoformat(req.data)
+    if data_richiesta < now.date():
+        return _errore("data nel passato")
+    if data_richiesta == now.date() and req.ora < now.strftime("%H:%M"):
         return _errore("data nel passato")
     if req.ora in repo.booked_slots(req.servizio, req.data):
         return _errore("slot non disponibile")

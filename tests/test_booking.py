@@ -40,7 +40,7 @@ def test_disponibilita_rejects_bad_input(repo):
     assert out["esito"] == "errore"
 
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 
 def test_crea_appuntamento_success(repo):
@@ -77,6 +77,18 @@ def test_crea_appuntamento_past_date(repo):
         repo,
         {"servizio": "anagrafe", "data": ieri, "ora": "09:00", "nome": "Mario"},
         SLOT_HOURS,
+    )
+    assert out["esito"] == "errore"
+
+
+def test_crea_appuntamento_today_slot_already_passed(repo):
+    oggi = date.today().isoformat()
+    ora_corrente = datetime.combine(date.today(), datetime.strptime("11:00", "%H:%M").time())
+    out = booking.crea_appuntamento(
+        repo,
+        {"servizio": "anagrafe", "data": oggi, "ora": "09:00", "nome": "Mario"},
+        SLOT_HOURS,
+        now=ora_corrente,
     )
     assert out["esito"] == "errore"
 

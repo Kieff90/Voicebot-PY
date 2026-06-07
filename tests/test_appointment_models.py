@@ -15,6 +15,11 @@ def test_availability_request_rejects_bad_date():
         AvailabilityRequest.model_validate({"servizio": "anagrafe", "data": "01/12/2026"})
 
 
+def test_availability_request_rejects_blank_servizio():
+    with pytest.raises(ValidationError):
+        AvailabilityRequest.model_validate({"servizio": "   ", "data": "2026-12-01"})
+
+
 def test_appointment_request_valid():
     req = AppointmentRequest.model_validate(
         {"servizio": "anagrafe", "data": "2026-12-01", "ora": "09:00", "nome": "Mario"}
@@ -31,4 +36,18 @@ def test_appointment_request_rejects_bad_time():
     with pytest.raises(ValidationError):
         AppointmentRequest.model_validate(
             {"servizio": "anagrafe", "data": "2026-12-01", "ora": "9", "nome": "Mario"}
+        )
+
+
+def test_appointment_request_rejects_blank_servizio():
+    with pytest.raises(ValidationError):
+        AppointmentRequest.model_validate(
+            {"servizio": "  ", "data": "2026-12-01", "ora": "09:00", "nome": "Mario"}
+        )
+
+
+def test_appointment_request_rejects_blank_nome():
+    with pytest.raises(ValidationError):
+        AppointmentRequest.model_validate(
+            {"servizio": "anagrafe", "data": "2026-12-01", "ora": "09:00", "nome": "   "}
         )

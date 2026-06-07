@@ -6,9 +6,21 @@ from pydantic import BaseModel, field_validator
 _TIME_RE = re.compile(r"^\d{2}:\d{2}$")
 
 
+def _not_blank(value: str) -> str:
+    value = value.strip()
+    if not value:
+        raise ValueError("valore vuoto")
+    return value
+
+
 class AvailabilityRequest(BaseModel):
     servizio: str
     data: str
+
+    @field_validator("servizio")
+    @classmethod
+    def servizio_not_blank(cls, value: str) -> str:
+        return _not_blank(value)
 
     @field_validator("data")
     @classmethod
@@ -22,6 +34,16 @@ class AppointmentRequest(BaseModel):
     data: str
     ora: str
     nome: str
+
+    @field_validator("servizio")
+    @classmethod
+    def servizio_not_blank(cls, value: str) -> str:
+        return _not_blank(value)
+
+    @field_validator("nome")
+    @classmethod
+    def nome_not_blank(cls, value: str) -> str:
+        return _not_blank(value)
 
     @field_validator("data")
     @classmethod
