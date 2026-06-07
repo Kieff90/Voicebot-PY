@@ -23,3 +23,29 @@ class AppointmentRepository:
             (codice, servizio, data, ora, nome),
         )
         self.conn.commit()
+
+    def list_all(
+        self,
+        *,
+        data_da: str | None = None,
+        data_a: str | None = None,
+        servizio: str | None = None,
+    ) -> list[sqlite3.Row]:
+        clauses = []
+        params: list[str] = []
+        if data_da:
+            clauses.append("data >= ?")
+            params.append(data_da)
+        if data_a:
+            clauses.append("data <= ?")
+            params.append(data_a)
+        if servizio:
+            clauses.append("servizio = ?")
+            params.append(servizio)
+
+        query = "SELECT codice, servizio, data, ora, nome, stato FROM appointments"
+        if clauses:
+            query += " WHERE " + " AND ".join(clauses)
+        query += " ORDER BY data, ora"
+
+        return self.conn.execute(query, params).fetchall()
