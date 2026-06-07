@@ -26,8 +26,6 @@ class Settings(BaseSettings):
     prenotazione_url: str = ""  # TODO: inserire link prenotazione appuntamento
 
     # Pannello admin (frontend minimale di sola lettura)
-    admin_user: str = ""
-    admin_password: str = ""
     service_categories: list[str] = [
         "Anagrafe e stato civile",
         "Autorizzazioni",

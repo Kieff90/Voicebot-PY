@@ -4,7 +4,6 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, Request
 from fastapi.templating import Jinja2Templates
 
-from backend.app.admin.auth import require_admin
 from backend.app.config import settings
 from backend.app.deps import get_repo
 from backend.app.services.appointments.repository import AppointmentRepository
@@ -33,7 +32,6 @@ def appointments(
     data_a: str | None = None,
     servizio: str | None = None,
     repo: AppointmentRepository = Depends(get_repo),
-    _: None = Depends(require_admin),
 ):
     data_da = _validated_date(data_da)
     data_a = _validated_date(data_a)
