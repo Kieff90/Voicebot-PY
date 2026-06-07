@@ -56,6 +56,11 @@ def test_appointments_with_malformed_date_does_not_break(client):
     assert resp.status_code == 200
 
 
+def test_appointments_end_date_field_disables_days_before_start_date(client):
+    resp = client.get("/admin/appointments?data_da=2026-06-10")
+    assert 'id="data_a" name="data_a" value="" min="2026-06-10"' in resp.text
+
+
 def test_appointments_ignores_end_date_before_start_date(client):
     client.post(
         "/tools/crea_appuntamento",
