@@ -12,8 +12,8 @@ Nota breve richiesta dai criteri di consegna del test. Per il dettaglio architet
 - Recupero senza secondo LLM: il backend fa solo retrieval (cosine NumPy su embedding locali), la
   generazione resta in Vapi (GPT-4.1).
 - Indice in memoria con cosine NumPy invece di FAISS o vector DB esterni: per 184 chunk uno scan
-  lineare è preciso e più semplice da gestire; FAISS resta documentato come evoluzione possibile se
-  il corpus crescesse molto.
+  lineare è preciso e più semplice da gestire; FAISS o un vector store dedicato restano evoluzioni
+  possibili se il corpus crescesse molto.
 - SQLite con vincolo `UNIQUE(servizio, data, ora)`: la garanzia anti doppia-prenotazione sta nel
   database, non nel codice applicativo.
 - Persistenza su database fin dal primo slice (non in memoria): le prenotazioni sopravvivono al
@@ -23,8 +23,8 @@ Nota breve richiesta dai criteri di consegna del test. Per il dettaglio architet
   filtri per data e categoria servizio, senza JavaScript né stato lato client.
 - Validazione Pydantic al confine: l'input che arriva dall'LLM non è affidabile, può mancare o
   avere un formato inatteso.
-- Fallback statico per il corpus: la demo non dipende dalla riuscita live di scraping e
-  indicizzazione.
+- Corpus di fallback statico: la demo può comunque partire anche se si vuole evitare di rieseguire
+  scraping e indicizzazione.
 
 ## Limitazioni
 
@@ -46,12 +46,23 @@ Nota breve richiesta dai criteri di consegna del test. Per il dettaglio architet
 1. Espandere i chunk con sinonimi e varianti lessicali, per coprire mismatch come "attività
    commerciale" / "attività produttive".
 2. Sostituire ngrok con un hosting stabile del backend.
-3. Ampliare l'eval set di retrieval oltre le attuali 14 domande.
+3. Ampliare e versionare l'eval set di retrieval oltre le attuali 14 domande usate per tarare la
+   soglia, così da rendere riproducibile la valutazione su precisione e fallback.
 4. Aggiungere un endpoint `verifica_appuntamento` per consultare una prenotazione esistente per
    codice (oggi `crea_appuntamento` copre solo la creazione).
 5. Recupero ibrido (dense + BM25) per i match esatti su codici e nomi degli uffici, dove
    l'embedding semantico è meno preciso del confronto testuale.
-6. Reranking con cross-encoder, utile soprattutto se il corpus crescesse molto oltre i 184 chunk
+6. Con una base documentale molto più ampia, spostare l'indice vettoriale da memoria locale a un
+   vector store dedicato (es. Qdrant o Supabase Vector): non necessario per 184 chunk, ma utile per
+   aggiornamenti incrementali, metadati più ricchi, filtri e gestione operativa di più fonti.
+7. Automatizzare la pipeline di acquisizione e aggiornamento con un orchestratore come n8n: un
+   workflow di ingestione potrebbe gestire scraping, pulizia, chunking, embedding e caricamento nel
+   vector store; un secondo workflow potrebbe esporre la ricerca verso altri processi. Questo
+   ridurrebbe soprattutto la complessità operativa e di monitoraggio, non necessariamente la
+   complessità tecnica complessiva. Nel prototipo ho tenuto la pipeline in Python per semplicità,
+   testabilità e controllo fine dello scraper, evitando dipendenze esterne non necessarie per la
+   dimensione attuale.
+8. Reranking con cross-encoder, utile soprattutto se il corpus crescesse molto oltre i 184 chunk
    attuali.
 
 ## Strumenti AI usati
@@ -60,6 +71,8 @@ Nota breve richiesta dai criteri di consegna del test. Per il dettaglio architet
   tool, modello dati), sviluppo in TDD, costruzione e taratura del corpus RAG (scraping, pulizia,
   soglia), scrittura e correzione del system prompt Vapi sulla base dei comportamenti osservati
   nelle chiamate reali, documentazione.
+- OpenAI Codex: revisione finale della repo, controllo di coerenza tra requisiti e deliverable,
+  rifinitura della documentazione di consegna.
 - crawl4ai + Playwright: acquisizione dei contenuti del sito comunale, necessaria per il rendering
   JavaScript del sito.
 - sentence-transformers (`intfloat/multilingual-e5-base`): embedding multilingue per il recupero
