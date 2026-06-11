@@ -511,6 +511,6 @@ più ampio; estrazione dati strutturati post-call; estensione del pannello ai lo
 
 ## 14. Strumenti di AI usati
 
-Sviluppo assistito da Claude (Anthropic) per progettazione e documentazione. Gli embedding usano
+Sviluppo assistito da Claude Code (Anthropic) e Codex (OpenAI) per progettazione e documentazione. Gli embedding usano
 modelli open-source della famiglia sentence-transformers. A runtime il backend non invia contenuti a
 servizi esterni: il recupero avviene in locale.
