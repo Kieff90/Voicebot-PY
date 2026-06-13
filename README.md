@@ -1,6 +1,6 @@
 # Voicebot servizi comunali — Comune di Cherasco
 
-Assistente vocale in italiano che aiuta un cittadino a ottenere informazioni sui servizi del Comune
+Assistente vocale in italiano che aiuta un cittadino a ottenere informazioni sui servizi del Comune di Cherasco
 e a prenotare un appuntamento a uno sportello.
 
 La parte vocale e conversazionale è gestita da Vapi. La conoscenza dei servizi e la logica degli
